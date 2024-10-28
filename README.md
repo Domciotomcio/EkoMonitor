@@ -8,6 +8,7 @@
 5. [Setup and Installation](#setup-and-installation)
 6. [Managing Branches](docs/managing_branches.md)
 7. [Usage](#usage)
+8. [Project Structure](#project-structure)
 
 ## Project Overview
 The **Environmental Monitoring System** is a microservices-based system designed to collect, process, forecast, and present data related to environmental factors, such as air quality, humidity, and other indicators. The goal is to provide users with meaningful insights through a mobile app, a web app, and AI-powered forecasting capabilities.
@@ -36,3 +37,15 @@ Setup and installation under this [link](docs/setup_and_instalation.md).
 
 ## Usage
 In progress
+
+## Project Structure
+The project is organized into the following directories under `src/`:
+
+- **data_aggregation**: Collects data from environmental sensors.
+- **data_processing**: Processes and refines collected data.
+- **ai_forecasting**: Provides predictions based on processed data.
+- **mobile_app**: Presents user-specific data and notifications.
+- **web_app**: Displays general environmental data for all users.
+- **api_gateway**: Manages communication and routes requests between modules.
+- **user_profiling**: Tailors data presentation based on user profiles.
+- **user_management**: Manages user accounts, permissions, and roles.
