@@ -6,9 +6,8 @@
 3. [System Architecture](docs/system_architecture.md)
 4. [Technologies Used](#technologies-used)
 5. [Setup and Installation](#setup-and-installation)
-6. [Usage](#usage)
-7. [Contributing](#contributing)
-8. [License](#license)
+6. [Managing Branches](docs/managing_branches.md)
+7. [Usage](#usage)
 
 ## Project Overview
 The **Environmental Monitoring System** is a microservices-based system designed to collect, process, forecast, and present data related to environmental factors, such as air quality, humidity, and other indicators. The goal is to provide users with meaningful insights through a mobile app, a web app, and AI-powered forecasting capabilities.
@@ -37,9 +36,3 @@ Setup and installation under this [link](docs/setup_and_instalation.md).
 
 ## Usage
 In progress
-
-## Contributing
-Contributions are welcome! Please open an issue or submit a pull request for any improvements or bug fixes.
-
-## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
