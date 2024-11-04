@@ -27,8 +27,8 @@ System architecture under this [link](docs/system_architecture.md).
 ## Technologies Used
 - **Backend**: Python (FastAPI for services)
 - **Frontend**: Angular (Web App), Flutter (Mobile App)
-- **Database**: *To discuss*
-- **AI/ML**: *To discuss*
+- **Database**: MongoDB
+- **AI/ML**: Keras 3.0 for Python
 - **API Gateway**: RestfulAPI and gateway *to discuss*
 - **Messaging/Communication**: *To discuss*
 
