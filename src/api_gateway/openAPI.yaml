@@ -1,0 +1,28 @@
+openapi: 3.0.0
+info:
+  title: EkoMonitor API
+  description: This is the API documentation for EkoMonitor.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api
+tags:
+  - name: Aggregation
+    description: Aggregation module operations
+paths:
+  /aggr/last_rec:
+    get:
+      summary: Get the last saved record
+      description: Returns a JSON object with the last saved record.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Hello, world!
+        '400':
+          description: 'bad request'
