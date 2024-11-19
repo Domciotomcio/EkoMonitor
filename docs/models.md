@@ -103,25 +103,24 @@ How data is processed and stored in the database in data processing module.
     },
     "wind_speed": {
       "value": "number",
-      "wind_direction": "string",
       "unit": "string"
     },
+    "wind_direction": {
+      "value": "string", # wind direction
+      "unit": "string"
+    }
     "pollen": {
       "value": "number",
       "unit": "string"
     },
-    "particulate_matter": {
-      "pm10": {
+    "pm10": {
         "value": "number",
         "unit": "string"
       },
-      "pm25": {
+    "pm25": {
         "value": "number",
         "unit": "string"
       }
-    }
-
-
   ]
 }
 ```

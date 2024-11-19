@@ -80,5 +80,32 @@ graph LR
     APIGateway --> UserManagement
 ```
 
+# Improved Architecture Diagram 
+```mermaid
+---
+title: Improved Architecture Diagram
+---
+graph LR
+    subgraph backend
+        DataAgg
+        DataProc
+        AIModule
+    end
+
+    subgraph frontend
+        MobileApp
+        WebApp
+    end
+
+    DataAgg[Data Aggregation Module] -.->SensorData[External API]
+    DataProc[Data Processing Module] -->DataAgg
+    DataAgg --> DataProc
+    AIModule[AI Forecasting Module] <-->DataProc
+    DataProc --> AIModule
+    MobileApp[Mobile App] <-->|User-Specific Data| APIGateway([API Gateway])
+    WebApp[Web App] <-->|General Data| APIGateway
+    DataProc <-->|Common Data| APIGateway
+    DataAgg <-->|Raw Data| APIGateway
+```
 
 

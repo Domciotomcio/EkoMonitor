@@ -1,5 +1,6 @@
 {
     "yaml.schemas": {
-        "openapi:v3": "file:///c%3A/Users/Dominik/Documents/EkoMonitor/src/api_gateway/openAPI.yaml"
+        "openapi:v3": "file:///c%3A/Users/Dominik/Documents/EkoMonitor/src/api_gateway/openAPI.yaml",
+        "swaggerviewer:openapi": "file:///Users/dominiktomaszewski/Documents/repos/EkoMonitor/src/api_gateway/openAPI.yaml"
     }
 }

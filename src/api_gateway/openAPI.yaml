@@ -1,18 +1,34 @@
 openapi: 3.0.0
 info:
-  title: EkoMonitor API
-  description: This is the API documentation for EkoMonitor.
+  title: Weather App API
+  description: This is the API documentation for the Weather App.
   version: 1.0.0
 servers:
   - url: http://localhost:8080/api
 tags:
-  - name: Aggregation
-    description: Aggregation module operations
+  - name: Current Weather
+    description: Operations related to current weather conditions
+  - name: Forecast
+    description: Operations related to weather forecasts
+  - name: Historical Data
+    description: Operations related to historical weather data
+  - name: Singular Weather condition
+    description: Operations related to singular weather conditions
+
 paths:
-  /aggr/last_rec:
+  /weather/current:
     get:
-      summary: Get the last saved record
-      description: Returns a JSON object with the last saved record.
+      tags:
+        - Current Weather
+      summary: Get current weather conditions
+      description: Returns the current weather conditions for a specified location.
+      parameters:
+        - name: city
+          in: query
+          required: true
+          schema:
+            type: string
+          description: City of the location
       responses:
         '200':
           description: Successful response
@@ -21,8 +37,205 @@ paths:
               schema:
                 type: object
                 properties:
-                  message:
+                  id:
                     type: string
-                    example: Hello, world!
+                  timestamp:
+                    type: number
+                  location:
+                    type: object
+                    properties:
+                      latitude:
+                        type: number
+                      longitude:
+                        type: number
+                      city:
+                        type: string
+                      region:
+                        type: string
+                      country:
+                        type: string
+                  weather_conditions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                        value:
+                          type: string
+                        unit:
+                          type: string 
         '400':
-          description: 'bad request'
+          description: Bad request
+
+  /weather/forecast:
+    get:
+      tags:
+        - Forecast
+      summary: Get weather forecast
+      description: Returns the weather forecast for a specified location.
+      parameters:
+        - name: city
+          in: query
+          required: true
+          schema:
+            type: string
+          description: City of the location
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  timestamp:
+                    type: number
+                  location:
+                    type: object
+                    properties:
+                      latitude:
+                        type: number
+                      longitude:
+                        type: number
+                      city:
+                        type: string
+                      region:
+                        type: string
+                      country:
+                        type: string
+                  weather_conditions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                        value:
+                          type: string
+                        unit:
+                          type: string 
+        '400':
+          description: Bad request
+
+  /weather/historical:
+    get:
+      tags:
+        - Historical Data
+      summary: Get historical weather data
+      description: Returns historical weather data for a specified location.
+      parameters:
+        - name: city
+          in: query
+          required: true
+          schema:
+            type: string
+          description: City of the location
+        - name: start_date
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Start date of the historical data
+        - name: end_date
+          in: query
+          required: true
+          schema:
+            type: string
+          description: End date of the historical data
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  timestamp:
+                    type: number
+                  location:
+                    type: object
+                    properties:
+                      latitude:
+                        type: number
+                      longitude:
+                        type: number
+                      city:
+                        type: string
+                      region:
+                        type: string
+                      country:
+                        type: string
+                  weather_conditions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                        value:
+                          type: string
+                        unit:
+                          type: string 
+        '400':
+          description: Bad request
+
+  /weather/singular:
+    get:
+      tags:
+        - Singular Weather condition
+      summary: Get singular weather condition
+      description: Returns a singular weather condition for a specified location.
+      parameters:
+        - name: city
+          in: query
+          required: true
+          schema:
+            type: string
+          description: City of the location
+        - name: condition
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Weather condition to retrieve
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  timestamp:
+                    type: number
+                  location:
+                    type: object
+                    properties:
+                      latitude:
+                        type: number
+                      longitude:
+                        type: number
+                      city:
+                        type: string
+                      region:
+                        type: string
+                      country:
+                        type: string
+                  weather_condition:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      value:
+                        type: string
+                      unit:
+                        type: string 
+        '400':
+          description: Bad request
