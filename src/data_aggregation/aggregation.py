@@ -6,6 +6,7 @@ import openmeteo_requests
 import datetime as dt
 
 openweather_key = os.getenv("OPENWEATHER_API_KEY")
+google_maps_key = os.getenv("GOOGLE_MAPS_API_KEY")
 
 
 # Get weather data from OpenWeatherMap API
@@ -51,9 +52,19 @@ def get_air_quality(lat, lon, days=(dt.datetime.now(), dt.datetime.now())):
 
 # Get pollen data from Google Pollen API    [NOT IMPLEMENTED YET]
 def get_pollen(lat, lon):
-    pass
+    """
+    Get pollen data from Google Pollen API in the form of JSON
+    :param lat: Latitude
+    :param lon: Longitude
+    :return: Pollen data in JSON format
+    """
+    url = f"https://pollen.googleapis.com/v1/forecast:lookup?key={google_maps_key}&location.longitude={lon}&location.latitude={lat}&days=1&plantsDescription=false"
+    response = requests.get(url)
+    data = response.json()
+    return data
 
 # for testing only
 if __name__ == "__main__":
-    print(get_weather(50, 50))
-    print(get_air_quality(50, 50, (dt.datetime(2024, 11, 17), dt.datetime(2024, 11, 19))))
+    print(get_weather(51, 17))
+    print(get_air_quality(51, 17, (dt.datetime(2024, 11, 17), dt.datetime(2024, 11, 19))))
+    print(get_pollen(51, 17))
