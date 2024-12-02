@@ -128,11 +128,8 @@ def process_hourly(weather, air_quality, pollen):
         "weather_conditions": {
             "precipitation": {
                 "value": weather_data["precipitation"],
+                "type": weather_data["precipitation_type"],
                 "unit": "mm/h"
-            },
-            "precipitation_type": {
-                "value": weather_data["precipitation_type"],
-                "unit": ""
             },
             "cloudiness": {
                 "value": weather_data["clouds"],
