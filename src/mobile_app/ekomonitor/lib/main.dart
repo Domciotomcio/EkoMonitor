@@ -1,15 +1,20 @@
+import 'package:ekomonitor/views/settings/weather-unit-setting-view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'views/settings/app-settings-view.dart';
+import 'views/settings/user-settings-view.dart';
+import 'views/settings/weather-settings-view.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
 }
 
 final List<SettingsButtonConfig> settingsList = [
-  const SettingsButtonConfig(
+  SettingsButtonConfig(
     text: "Ustawienia pogody",
-    color: Colors.blueGrey,
-    icon: Icon(Icons.settings),
+    color: Colors.blue[900]!,
+    icon: Icon(Icons.cloud_outlined),
     path: '/weather-settings',
   ),
   const SettingsButtonConfig(
@@ -21,42 +26,10 @@ final List<SettingsButtonConfig> settingsList = [
   const SettingsButtonConfig(
     text: "Ustawienia uzytkownika",
     color: Colors.deepPurple,
-    icon: Icon(Icons.settings),
+    icon: Icon(Icons.person_outline),
     path: '/user-settings',
   ),
 ];
-
-class WeatherSettingsView extends StatelessWidget {
-  const WeatherSettingsView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Ustawienia pogody'),
-      ),
-      body: ListView(
-        children: [
-          const ListTile(
-            title: Text("Tytuł"),
-            subtitle: Text("Podtytuł"),
-            leading: Icon(Icons.ac_unit),
-          ),
-          const ListTile(
-            title: Text("Tytuł"),
-            subtitle: Text("Podtytuł"),
-            leading: Icon(Icons.ac_unit),
-          ),
-          const ListTile(
-            title: Text("Tytuł"),
-            subtitle: Text("Podtytuł"),
-            leading: Icon(Icons.ac_unit),
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 class MainTile extends StatelessWidget {
   final String subtitle;
@@ -122,13 +95,41 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      initialRoute: '/',
+      initialRoute: '/weather-settings',
       routes: {
         '/': (context) => HomePage(),
         '/weather-settings': (context) => const WeatherSettingsView(),
+        '/app-settings': (context) => const AppSettingsView(),
+        '/user-settings': (context) => const UserSettingsView(),
+        ...generateWeatherSettingsRoutes(weatherUnits),
+        ...generateWeatherRoutes(weatherUnits),
       },
     );
   }
+}
+
+Map<String, WidgetBuilder> generateWeatherSettingsRoutes(
+    List<WeatherCondition> weatherUnits) {
+  return Map.fromEntries(
+    weatherUnits.map((weatherUnit) {
+      return MapEntry(
+        weatherUnit.settingsPath,
+        (context) => WeatherUnitSettingView(weatherCondition: weatherUnit),
+      );
+    }),
+  );
+}
+
+Map<String, WidgetBuilder> generateWeatherRoutes(
+    List<WeatherCondition> weatherUnits) {
+  return Map.fromEntries(
+    weatherUnits.map((weatherUnit) {
+      return MapEntry(
+        weatherUnit.path,
+        (context) => WeatherUnitSettingView(weatherCondition: weatherUnit),
+      );
+    }),
+  );
 }
 
 class HomePage extends StatelessWidget {
@@ -175,8 +176,13 @@ class HomePage extends StatelessWidget {
               const Text("Ustawienia"),
               Row(
                 children: settingsList
-                    .map((config) =>
-                        Expanded(child: SettingsButton(config: config)))
+                    .map((config) => Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 4.0), // Add horizontal padding
+                            child: SettingsButton(config: config),
+                          ),
+                        ))
                     .toList(),
               ),
             ],
@@ -254,7 +260,11 @@ class SettingsButton extends StatelessWidget {
         child: Stack(
           children: [
             Positioned(
-              child: config.icon,
+              child: Icon(
+                config.icon.icon,
+                color: config.color,
+                size: 32,
+              ),
               right: 8,
               top: 8,
             ),
