@@ -1,4 +1,8 @@
+import 'package:ekomonitor/data/weather-condition-description-list.dart';
+import 'package:ekomonitor/models/weather-condition-description.dart';
+import 'package:ekomonitor/models/weather-condition-unit.dart';
 import 'package:ekomonitor/views/settings/weather-unit-setting-view.dart';
+import 'package:ekomonitor/widgets/weather-condition-tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -9,6 +13,25 @@ import 'views/settings/weather-settings-view.dart';
 void main() {
   runApp(const ProviderScope(child: MyApp()));
 }
+
+final List<WthrConUnit> wthrConUnitList = [
+  WthrConUnit(
+    wthrConDesc: wthrConDescList[0],
+    value: 'value',
+  ),
+  WthrConUnit(
+    wthrConDesc: wthrConDescList[1],
+    value: 'value',
+  ),
+  WthrConUnit(
+    wthrConDesc: wthrConDescList[2],
+    value: 'value',
+  ),
+  WthrConUnit(
+    wthrConDesc: wthrConDescList[3],
+    value: 'value',
+  ),
+];
 
 final List<SettingsButtonConfig> settingsList = [
   SettingsButtonConfig(
@@ -95,21 +118,21 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      initialRoute: '/weather-settings',
+      initialRoute: '/',
       routes: {
         '/': (context) => HomePage(),
         '/weather-settings': (context) => const WeatherSettingsView(),
         '/app-settings': (context) => const AppSettingsView(),
         '/user-settings': (context) => const UserSettingsView(),
-        ...generateWeatherSettingsRoutes(weatherUnits),
-        ...generateWeatherRoutes(weatherUnits),
+        ...generateWeatherSettingsRoutes(wthrConDescList),
+        ...generateWeatherRoutes(wthrConDescList),
       },
     );
   }
 }
 
 Map<String, WidgetBuilder> generateWeatherSettingsRoutes(
-    List<WeatherCondition> weatherUnits) {
+    List<WthrConDesc> weatherUnits) {
   return Map.fromEntries(
     weatherUnits.map((weatherUnit) {
       return MapEntry(
@@ -121,7 +144,7 @@ Map<String, WidgetBuilder> generateWeatherSettingsRoutes(
 }
 
 Map<String, WidgetBuilder> generateWeatherRoutes(
-    List<WeatherCondition> weatherUnits) {
+    List<WthrConDesc> weatherUnits) {
   return Map.fromEntries(
     weatherUnits.map((weatherUnit) {
       return MapEntry(
@@ -200,29 +223,16 @@ class WeatherCarousel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SizedBox(
-      height: 130,
-      child: CarouselView(
+    return SizedBox(
+        height: 130,
+        child: CarouselView(
           scrollDirection: Axis.horizontal,
-          itemExtent: double.infinity,
-          children: [
-            SizedBox(
-              width: 100,
-              height: 100,
-              child: Placeholder(),
-            ),
-            SizedBox(
-              width: 100,
-              height: 100,
-              child: Placeholder(),
-            ),
-            SizedBox(
-              width: 100,
-              height: 100,
-              child: Placeholder(),
-            ),
-          ]),
-    );
+          itemExtent: 240,
+          children: wthrConUnitList
+              .map((wthrConUnit) =>
+                  WeatherConditionTile(wthrConUnit: wthrConUnit))
+              .toList(),
+        ));
   }
 }
 

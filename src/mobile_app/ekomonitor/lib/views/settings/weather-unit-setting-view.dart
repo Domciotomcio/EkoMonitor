@@ -1,9 +1,10 @@
+import 'package:ekomonitor/models/weather-condition-description.dart';
 import 'package:flutter/material.dart';
 
 import 'weather-settings-view.dart';
 
 class WeatherUnitSettingView extends StatelessWidget {
-  final WeatherCondition weatherCondition;
+  final WthrConDesc weatherCondition;
 
   const WeatherUnitSettingView({super.key, required this.weatherCondition});
 
