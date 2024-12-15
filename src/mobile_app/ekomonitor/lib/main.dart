@@ -2,9 +2,12 @@ import 'package:ekomonitor/data/weather-condition-description-list.dart';
 import 'package:ekomonitor/models/weather-condition-description.dart';
 import 'package:ekomonitor/models/weather-condition-unit.dart';
 import 'package:ekomonitor/views/settings/weather-unit-setting-view.dart';
+import 'package:ekomonitor/widgets/main-tile.dart';
 import 'package:ekomonitor/widgets/weather-condition-tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'data/main-tile-dic.dart';
 
 import 'views/settings/app-settings-view.dart';
 import 'views/settings/user-settings-view.dart';
@@ -13,6 +16,45 @@ import 'views/settings/weather-settings-view.dart';
 void main() {
   runApp(const ProviderScope(child: MyApp()));
 }
+
+final ThemeData theme1 = ThemeData(
+  colorScheme: ColorScheme.fromSeed(
+    seedColor: const Color.fromARGB(255, 173, 52, 52),
+    brightness: Brightness.light,
+  ),
+  useMaterial3: true,
+);
+
+final ThemeData theme2 = ThemeData(
+  colorScheme: ColorScheme.fromSeed(
+    seedColor: const Color.fromARGB(255, 82, 68, 183),
+    brightness: Brightness.light,
+  ),
+  useMaterial3: true,
+);
+
+final ThemeData theme3 = ThemeData(
+  colorScheme: ColorScheme.fromSeed(
+    seedColor: const Color.fromARGB(255, 52, 173, 52),
+    brightness: Brightness.light,
+  ),
+  useMaterial3: true,
+);
+
+class ThemeNotifier extends StateNotifier<ThemeData> {
+  ThemeNotifier() : super(theme1);
+
+  void setTheme(ThemeData theme) {
+    state = theme;
+  }
+}
+
+final themeNotifierProvider =
+    StateNotifierProvider<ThemeNotifier, ThemeData>((ref) {
+  return ThemeNotifier();
+});
+
+const MAIN_TILE_CODE = 'rainy';
 
 final List<WthrConUnit> wthrConUnitList = [
   WthrConUnit(
@@ -54,70 +96,15 @@ final List<SettingsButtonConfig> settingsList = [
   ),
 ];
 
-class MainTile extends StatelessWidget {
-  final String subtitle;
-  final String title;
-  final Color color;
-  final IconData icon;
-
-  const MainTile({
-    super.key,
-    required this.color,
-    required this.title,
-    required this.subtitle,
-    required this.icon,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(8),
-      child: SizedBox(
-          width: double.infinity,
-          height: 130,
-          child: Stack(
-            children: <Widget>[
-              Container(
-                color: color,
-                width: double.infinity,
-                height: double.infinity,
-              ),
-              Positioned(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(subtitle),
-                      Text(title,
-                          style: Theme.of(context).textTheme.headlineMedium),
-                    ],
-                  ),
-                  left: 8,
-                  bottom: 8),
-              const Positioned(
-                  child: Icon(
-                    Icons.abc,
-                    size: 64,
-                  ),
-                  right: 8,
-                  top: 8),
-            ],
-          )),
-    );
-  }
-}
-
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = ref.watch(themeNotifierProvider);
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      theme: theme,
       initialRoute: '/',
       routes: {
         '/': (context) => HomePage(),
@@ -155,12 +142,21 @@ Map<String, WidgetBuilder> generateWeatherRoutes(
   );
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         title: const Text('Witaj Developerze'),
+        actions: [
+          IconButton.filled(onPressed: () {}, icon: Icon(Icons.person)),
+          IconButton.filled(
+              onPressed: () {
+                print("Bla bla bla");
+              },
+              icon: Icon(Icons.brightness_4)),
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -169,12 +165,7 @@ class HomePage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text("Witaj w aplikacji Ekomonitor"),
-              const MainTile(
-                color: Colors.red,
-                title: 'Tytuł',
-                subtitle: 'Podtytuł',
-                icon: Icons.ac_unit,
-              ),
+              MainTile(),
               const Divider(),
               const Text("Warunki pogodowe"),
               const WeatherCarousel(),
@@ -207,6 +198,51 @@ class HomePage extends StatelessWidget {
                           ),
                         ))
                     .toList(),
+              ),
+              FilledButton(
+                  onPressed: () {
+                    Color mainColor = Colors.amber;
+
+                    ref
+                        .read(weatherStatusNotifierProvider.notifier)
+                        .updateWeatherStatus(
+                          WeatherStatus(
+                              mainTileConfig: mainTileDict['sunny']!,
+                              wthrConUnitList: wthrConUnitList,
+                              theme: ThemeData(
+                                colorScheme: ColorScheme.fromSeed(
+                                  seedColor: mainColor,
+                                  brightness: Brightness.light,
+                                ),
+                                useMaterial3: true,
+                              )),
+                        );
+                  },
+                  child: Text("Opcja 1 - słonecznie")),
+              FilledButton(
+                onPressed: () {
+                  Color mainColor = Colors.blue;
+
+                  ref
+                      .read(weatherStatusNotifierProvider.notifier)
+                      .updateWeatherStatus(WeatherStatus(
+                        mainTileConfig: MainTileConfig(
+                            code: 'rainy',
+                            color: mainColor,
+                            title: 'Dzisiaj pochmurno i deszczowo',
+                            subtitle: 'Prognozowane opady',
+                            icon: Icons.cloudy_snowing),
+                        wthrConUnitList: wthrConUnitList,
+                        theme: ThemeData(
+                          colorScheme: ColorScheme.fromSeed(
+                            seedColor: mainColor,
+                            brightness: Brightness.light,
+                          ),
+                          useMaterial3: true,
+                        ),
+                      ));
+                },
+                child: Text("Opcja 2 - deszczowo"),
               ),
             ],
           ),
@@ -294,3 +330,38 @@ class SettingsButton extends StatelessWidget {
     );
   }
 }
+
+////////////////////////
+class WeatherStatus {
+  final MainTileConfig mainTileConfig;
+  final List<WthrConUnit> wthrConUnitList;
+  final ThemeData theme;
+
+  WeatherStatus({
+    required this.mainTileConfig,
+    required this.wthrConUnitList,
+    required this.theme,
+  });
+}
+
+class WeatherStatusNotifier extends StateNotifier<WeatherStatus> {
+  final Ref ref;
+
+  WeatherStatusNotifier(this.ref)
+      : super(WeatherStatus(
+          mainTileConfig: mainTileDict[MAIN_TILE_CODE]!,
+          wthrConUnitList: wthrConUnitList,
+          theme: theme1,
+        ));
+
+  void updateWeatherStatus(WeatherStatus weatherStatus) {
+    state = weatherStatus;
+    // Update the theme using ThemeNotifier
+    ref.read(themeNotifierProvider.notifier).setTheme(weatherStatus.theme);
+  }
+}
+
+final weatherStatusNotifierProvider =
+    StateNotifierProvider<WeatherStatusNotifier, WeatherStatus>((ref) {
+  return WeatherStatusNotifier(ref);
+});

@@ -16,7 +16,8 @@ class WeatherSettingsView extends StatelessWidget {
           final weatherUnit = wthrConDescList[index];
           return ListTile(
             title: Text(weatherUnit.name),
-            leading: weatherUnit.icon,
+            leading: Icon(weatherUnit.icon.icon,
+                color: Theme.of(context).colorScheme.primary),
             trailing: Icon(Icons.arrow_right),
             onTap: () {
               Navigator.of(context).pushNamed(weatherUnit.settingsPath);
