@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from process import process_hourly_request
+from process import process_hourly_request, process_historical_request
 
 
 app = FastAPI()
@@ -13,8 +13,11 @@ def read_root():
 
 @app.get("/hourly/all")
 def read_item(lat: float, lon: float):
-    
     return process_hourly_request(lat, lon)
+
+@app.get("/historical/all")
+def read_item(lat: float, lon: float, start: str, end: str):
+    return process_historical_request(lat, lon, start, end)
 
 
 # for testing only

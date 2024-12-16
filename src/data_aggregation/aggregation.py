@@ -24,6 +24,22 @@ def get_weather(lat, lon):
     data = response.json()
     return json.dumps(data)
 
+
+# Get historical weather data from OpenWeatherMap API
+def get_historical_weather(lat, lon, start, end):
+    """
+    Get historical weather data from OpenWeatherMap API
+    :param lat: Latitude
+    :param lon: Longitude
+    :param start: Start date in UNIX timestamp UTC timezone
+    :param end: End date in UNIX timestamp UTC timezone
+    :return: Weather data in JSON format
+    """
+    url = f"https://history.openweathermap.org/data/2.5/history/city?lat={lat}&lon={lon}&type=hour&start={start}&end={end}&appid={openweather_key}&units=metric"
+    response = requests.get(url)
+    data = response.json()
+    return json.dumps(data)
+
 # Get air quality data from OpenMeteo API
 def get_air_quality(lat, lon, days=(dt.datetime.now(), dt.datetime.now())):
     """

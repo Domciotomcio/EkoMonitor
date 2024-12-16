@@ -39,6 +39,37 @@ def process_weather_data(data):
         "wind_degrees": dd["wind"]["deg"],
     }
 
+def process_mass_weather_data(data):
+    """
+    Function to process bulk weather data from OpenWeatherMap API
+
+    :param data: JSON data from OpenWeatherMap API
+
+    :return: Dictionary containing processed weather data
+    """
+    dd = json.loads(data)
+    dd = dd["list"]
+    result = {}
+    result["lat"] = dd[0]["coord"]["lat"]
+    result["lon"] = dd[0]["coord"]["lon"]
+    result["list"] = {}
+    for d in dd:
+        result["list"][d["dt"]] = {
+            "lat": d["coord"]["lat"],
+            "lon": d["coord"]["lon"],
+            "precipitation": d["rain"]["1h"] if "rain" in d else d["snow"]["1h"] if "snow" in d else 0,
+            "precipitation_type": "rain" if "rain" in d else "snow" if "snow" in d else "none",
+            "clouds": d["clouds"]["all"],
+            "temperature": d["main"]["temp"],
+            "pressure": d["main"]["pressure"],
+            "humidity": d["main"]["humidity"],
+            "visibility": d["visibility"],
+            "wind_speed": d["wind"]["speed"],
+            "wind_degrees": d["wind"]["deg"],
+        }
+    return result
+
+
 def process_air_quality_data(data):
     """
     Function to process air quality data from OpenMeteo API
@@ -61,7 +92,7 @@ def process_air_quality_data(data):
         "aqi": aqi,
         "days": days,
     }
-    
+
 
 def process_pollen_data(data):
     """
@@ -248,6 +279,95 @@ def process_hourly_request(lat, lon):
     response = requests.get(url)
     resp = response.json()
     return process_hourly(resp["weather"], resp["air_quality"], resp["pollen"])
+
+
+def process_historical_data(weather, air_quality):
+    """
+    Function to process historical data from OpenWeatherMap API and OpenMeteo API
+
+    :param weather: JSON data from OpenWeatherMap API
+    :param air_quality: List of three numpy arrays: hourly_pm10, hourly_pm2_5, hourly_aqi. Each numpy has a number of values equal to 24 * number of days in the range
+
+    :return: Dictionary containing processed historical data
+    """
+    weather_data = process_mass_weather_data(weather)
+    air_quality_data = process_air_quality_data(air_quality)
+
+    result = {}
+    result["location"] = {
+        "latitude": weather_data["lat"],
+        "longitude": weather_data["lon"],
+    }
+    result["weather_data"] = {}
+    i = 0
+    for timestamp, data in weather_data["list"].items():
+        result["weather_data"][timestamp] = {
+            "precipitation": {
+                "value": data["precipitation"],
+                "type": data["precipitation_type"],
+                "unit": "mm/h"
+            },
+            "cloudiness": {
+                "value": data["clouds"],
+                "unit": "%"
+            },
+            "temperature": {
+                "value": data["temperature"],
+                "unit": "°C"
+            },
+            "pressure": {
+                "value": data["pressure"],
+                "unit": "hPa"
+            },
+            "humidity": {
+                "value": data["humidity"],
+                "unit": "%"
+            },
+            "visibility": {
+                "value": data["visibility"],
+                "unit": "m"
+            },
+            "wind_speed": {
+                "value": data["wind_speed"],
+                "unit": "m/s"
+            },
+            "wind_direction": {
+                "value": data["wind_degrees"],
+                "unit": "°"
+            },
+            "pm10": {
+                "value": air_quality_data["pm10"][i],
+                "unit": "µg/m³"
+            },
+            "pm2_5": {
+                "value": air_quality_data["pm2_5"][i],
+                "unit": "µg/m³"
+            },
+            "aqi": {
+                "value": air_quality_data["aqi"][i],
+                "unit": ""
+            },
+        }
+        i += 1
+    return json.dumps(str(result))
+
+
+def process_historical_request(lat, lon, start, end):
+    """
+    Function to process historical data from API
+
+    :param lat: Latitude
+    :param lon: Longitude
+    :param start: Start date in UNIX timestamp UTC timezone
+    :param end: End date in UNIX timestamp UTC timezone
+
+    :return: results of process_hourly with data from aggregation API
+    """
+    url=f"http://127.0.0.1:8000/historical/all?lat={lat}&lon={lon}&start={start}&end={end}"
+    response = requests.get(url)
+    resp = response.json()
+    return process_historical_data(resp["weather"], resp["air_quality"])
+
 
 # for testing only
 if __name__ == "__main__":
