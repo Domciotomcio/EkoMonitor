@@ -38,7 +38,6 @@ class MainTile extends ConsumerWidget {
 
     return Container(
         width: double.infinity,
-        height: 130,
         decoration: BoxDecoration(
             color: config.color,
             borderRadius: BorderRadius.circular(12),
@@ -50,31 +49,31 @@ class MainTile extends ConsumerWidget {
                 offset: const Offset(0, 3), // changes position of shadow
               ),
             ]),
-        child: Stack(
-          children: <Widget>[
-            Positioned(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(subtitle, style: const TextStyle(color: Colors.white)),
-                    Text(title,
-                        style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white)),
-                  ],
-                ),
-                left: 8,
-                bottom: 8),
-            Positioned(
-                right: 8,
-                top: 8,
-                child: Icon(
-                  icon,
-                  size: 64,
-                  color: Colors.white,
-                )),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Icon(
+                    icon,
+                    size: 48,
+                    color: Colors.white,
+                  ),
+                ],
+              ),
+              Text(subtitle, style: const TextStyle(color: Colors.white)),
+              Text(
+                title,
+                style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
+              ),
+            ],
+          ),
         ));
   }
 }

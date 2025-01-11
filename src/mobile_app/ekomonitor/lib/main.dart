@@ -1,7 +1,9 @@
 import 'package:ekomonitor/data/weather-condition-description-list.dart';
 import 'package:ekomonitor/models/weather-condition-description.dart';
 import 'package:ekomonitor/models/weather-condition-unit.dart';
+import 'package:ekomonitor/views/developer-view.dart';
 import 'package:ekomonitor/views/settings/weather-unit-setting-view.dart';
+import 'package:ekomonitor/views/weather-unit-view.dart';
 import 'package:ekomonitor/widgets/main-tile.dart';
 import 'package:ekomonitor/widgets/weather-condition-tile.dart';
 import 'package:flutter/material.dart';
@@ -75,20 +77,20 @@ final List<WthrConUnit> wthrConUnitList = [
   ),
 ];
 
-final List<SettingsButtonConfig> settingsList = [
-  SettingsButtonConfig(
+final List<SettingsTileConfig> settingsList = [
+  SettingsTileConfig(
     text: "Ustawienia pogody",
     color: Colors.blue[900]!,
     icon: Icon(Icons.cloud_outlined),
     path: '/weather-settings',
   ),
-  const SettingsButtonConfig(
+  const SettingsTileConfig(
     text: "Ustawienia aplikacji",
     color: Colors.grey,
     icon: Icon(Icons.settings),
     path: '/app-settings',
   ),
-  const SettingsButtonConfig(
+  const SettingsTileConfig(
     text: "Ustawienia uzytkownika",
     color: Colors.deepPurple,
     icon: Icon(Icons.person_outline),
@@ -105,7 +107,7 @@ class MyApp extends ConsumerWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: theme,
-      initialRoute: '/',
+      initialRoute: '/user-settings',
       routes: {
         '/': (context) => HomePage(),
         '/weather-settings': (context) => const WeatherSettingsView(),
@@ -113,6 +115,7 @@ class MyApp extends ConsumerWidget {
         '/user-settings': (context) => const UserSettingsView(),
         ...generateWeatherSettingsRoutes(wthrConDescList),
         ...generateWeatherRoutes(wthrConDescList),
+        '/developer': (context) => DeveloperView(),
       },
     );
   }
@@ -136,7 +139,7 @@ Map<String, WidgetBuilder> generateWeatherRoutes(
     weatherUnits.map((weatherUnit) {
       return MapEntry(
         weatherUnit.path,
-        (context) => WeatherUnitSettingView(weatherCondition: weatherUnit),
+        (context) => WeatherUnitView(weatherCondition: weatherUnit),
       );
     }),
   );
@@ -150,147 +153,188 @@ class HomePage extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Witaj Developerze'),
         actions: [
-          IconButton.filled(onPressed: () {}, icon: Icon(Icons.person)),
-          IconButton.filled(
-              onPressed: () {
-                print("Bla bla bla");
-              },
-              icon: Icon(Icons.brightness_4)),
+          IconButton(
+            icon: const Icon(Icons.warning),
+            onPressed: () {
+              Navigator.pushNamed(context, '/developer');
+            },
+          ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text("Witaj w aplikacji Ekomonitor"),
-              MainTile(),
-              const Divider(),
-              const Text("Warunki pogodowe"),
-              const WeatherCarousel(),
-              const Divider(),
-              const Text("Warto zwrócić na to uwagę"),
-              const ListTile(
-                title: Text("Tytuł"),
-                subtitle: Text("Podtytuł"),
-                leading: Icon(Icons.ac_unit),
-              ),
-              const ListTile(
-                title: Text("Tytuł"),
-                subtitle: Text("Podtytuł"),
-                leading: Icon(Icons.ac_unit),
-              ),
-              const ListTile(
-                title: Text("Tytuł"),
-                subtitle: Text("Podtytuł"),
-                leading: Icon(Icons.ac_unit),
-              ),
-              const Divider(),
-              const Text("Ustawienia"),
-              Row(
-                children: settingsList
-                    .map((config) => Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 4.0), // Add horizontal padding
-                            child: SettingsButton(config: config),
-                          ),
-                        ))
-                    .toList(),
-              ),
-              FilledButton(
-                  onPressed: () {
-                    Color mainColor = Colors.amber;
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          if (constraints.maxWidth < 600) {
+            return const HomeViewMobile();
+          } else {
+            return const HomeViewDesktop();
+          }
+        },
+      ),
+    );
+  }
+}
 
-                    ref
-                        .read(weatherStatusNotifierProvider.notifier)
-                        .updateWeatherStatus(
-                          WeatherStatus(
-                              mainTileConfig: mainTileDict['sunny']!,
-                              wthrConUnitList: wthrConUnitList,
-                              theme: ThemeData(
-                                colorScheme: ColorScheme.fromSeed(
-                                  seedColor: mainColor,
-                                  brightness: Brightness.light,
-                                ),
-                                useMaterial3: true,
-                              )),
-                        );
-                  },
-                  child: Text("Opcja 1 - słonecznie")),
-              FilledButton(
-                onPressed: () {
-                  Color mainColor = Colors.blue;
+class HomeViewMobile extends ConsumerWidget {
+  const HomeViewMobile({super.key});
 
-                  ref
-                      .read(weatherStatusNotifierProvider.notifier)
-                      .updateWeatherStatus(WeatherStatus(
-                        mainTileConfig: MainTileConfig(
-                            code: 'rainy',
-                            color: mainColor,
-                            title: 'Dzisiaj pochmurno i deszczowo',
-                            subtitle: 'Prognozowane opady',
-                            icon: Icons.cloudy_snowing),
-                        wthrConUnitList: wthrConUnitList,
-                        theme: ThemeData(
-                          colorScheme: ColorScheme.fromSeed(
-                            seedColor: mainColor,
-                            brightness: Brightness.light,
-                          ),
-                          useMaterial3: true,
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            MainTile(),
+            const Divider(),
+            const Text("Warunki pogodowe"),
+            SizedBox(height: 100, child: const WeatherCarousel()),
+            const Divider(),
+            WorthMentioning(),
+            const Divider(),
+            const Text("Ustawienia"),
+            Row(
+              children: settingsList
+                  .map((config) => Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 4.0), // Add horizontal padding
+                          child: SettingsTile(config: config),
                         ),
-                      ));
-                },
-                child: Text("Opcja 2 - deszczowo"),
-              ),
-            ],
-          ),
+                      ))
+                  .toList(),
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-class WeatherCarousel extends StatelessWidget {
+class WorthMentioning extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const Text("Warto zwrócić na to uwagę"),
+        for (int i = 0; i < 3; i++)
+          ListTile(
+            title: Text(wthrConDescList[i].name),
+            subtitle: Text(wthrConDescList[i].description),
+            leading: Icon(wthrConDescList[i].icon.icon),
+            onTap: () {
+              Navigator.pushNamed(context, wthrConDescList[i].path);
+            },
+          ),
+      ],
+    );
+  }
+}
+
+class HomeViewDesktop extends ConsumerWidget {
+  const HomeViewDesktop({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            MainTile(),
+            const Divider(),
+            Container(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                      width: 200,
+                      child: Column(
+                        children: ref
+                            .watch(weatherStatusNotifierProvider)
+                            .wthrConUnitList
+                            .map((wthrConUnit) => Padding(
+                                  padding: const EdgeInsets.only(
+                                      bottom:
+                                          8.0), // Add space between the widgets
+                                  child: WeatherConditionTile(
+                                      wthrConUnit: wthrConUnit),
+                                ))
+                            .toList(),
+                      )),
+                  SizedBox(width: 8), // Add space between the two columns
+                  Expanded(
+                      child: Container(
+                          height: 400,
+                          color: Theme.of(context).colorScheme.surfaceContainer,
+                          child: Center(child: Text("Presentation")))),
+                ],
+              ),
+            ),
+            const Divider(),
+            WorthMentioning(),
+            const Divider(),
+            const Text("Ustawienia"),
+            Row(
+              children: settingsList
+                  .map((config) => Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 4.0), // Add horizontal padding
+                          child: SettingsTile(config: config),
+                        ),
+                      ))
+                  .toList(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class WeatherCarousel extends ConsumerWidget {
   const WeatherCarousel({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-        height: 130,
-        child: CarouselView(
-          scrollDirection: Axis.horizontal,
-          itemExtent: 240,
-          children: wthrConUnitList
-              .map((wthrConUnit) =>
-                  WeatherConditionTile(wthrConUnit: wthrConUnit))
-              .toList(),
-        ));
+  Widget build(BuildContext context, WidgetRef ref) {
+    return CarouselView(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      scrollDirection: Axis.horizontal,
+      itemExtent: 200,
+      children: ref
+          .watch(weatherStatusNotifierProvider)
+          .wthrConUnitList
+          .map((wthrConUnit) => WeatherConditionTile(wthrConUnit: wthrConUnit))
+          .toList(),
+    );
   }
 }
 
 // SETTINGS BUTTON
 
-class SettingsButtonConfig {
+class SettingsTileConfig {
   final String text;
   final Color color;
   final Icon icon;
   final String path;
 
-  const SettingsButtonConfig(
+  const SettingsTileConfig(
       {this.text = "Ustawienia",
       this.color = Colors.grey,
       this.icon = const Icon(Icons.settings),
       this.path = "/"});
 }
 
-class SettingsButton extends StatelessWidget {
-  final SettingsButtonConfig config;
+class SettingsTile extends StatelessWidget {
+  final SettingsTileConfig config;
 
-  const SettingsButton({super.key, required this.config});
+  const SettingsTile({super.key, required this.config});
 
   @override
   Widget build(BuildContext context) {
@@ -301,30 +345,27 @@ class SettingsButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: config.color),
         ),
-        height: 100,
         width: double.infinity,
-        child: Stack(
-          children: [
-            Positioned(
-              child: Icon(
-                config.icon.icon,
-                color: config.color,
-                size: 32,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Icon(
+                    config.icon.icon,
+                    color: config.color,
+                    size: 32,
+                  ),
+                ],
               ),
-              right: 8,
-              top: 8,
-            ),
-            Positioned(
-              child: Text(
+              Text(
                 config.text,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                softWrap: true,
               ),
-              left: 8,
-              bottom: 8,
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -1,8 +1,10 @@
+import 'package:ekomonitor/main.dart';
 import 'package:ekomonitor/models/weather-condition-description.dart';
 import 'package:ekomonitor/models/weather-condition-unit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class WeatherConditionTile extends StatelessWidget {
+class WeatherConditionTile extends ConsumerWidget {
   final WthrConUnit wthrConUnit;
 
   const WeatherConditionTile(
@@ -19,31 +21,50 @@ class WeatherConditionTile extends StatelessWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
-        margin: EdgeInsets.all(2),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: Colors.black, width: 1),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+              color:
+                  ref.watch(weatherStatusNotifierProvider).theme.primaryColor,
+              width: 1),
         ),
-        child: Stack(
-          children: [
-            Positioned(
-              child: Icon(wthrConUnit.wthrConDesc.icon.icon, size: 32),
-              top: 8,
-              right: 8,
-            ),
-            Positioned(
-              child: Text(wthrConUnit.wthrConDesc.name),
-              bottom: 8,
-              right: 8,
-            ),
-            Positioned(
-              child: Text(wthrConUnit.value, style: TextStyle(fontSize: 24)),
-              bottom: 8,
-              left: 8,
-            ),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Icon(wthrConUnit.wthrConDesc.icon.icon,
+                      size: 32,
+                      color: ref
+                          .watch(weatherStatusNotifierProvider)
+                          .theme
+                          .primaryColor),
+                ],
+              ),
+              SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Expanded(
+                      child: Text(wthrConUnit.value,
+                          style: TextStyle(fontSize: 20))),
+                  Expanded(
+                    child: Text(
+                      wthrConUnit.wthrConDesc.name,
+                      softWrap: true,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
         ));
   }
 }

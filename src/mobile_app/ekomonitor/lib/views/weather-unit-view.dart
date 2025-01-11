@@ -1,12 +1,13 @@
 import 'package:ekomonitor/models/weather-condition-description.dart';
 import 'package:flutter/material.dart';
 
-import 'weather-settings-view.dart';
-
-class WeatherUnitSettingView extends StatelessWidget {
+class WeatherUnitView extends StatelessWidget {
   final WthrConDesc weatherCondition;
 
-  const WeatherUnitSettingView({super.key, required this.weatherCondition});
+  WeatherUnitView({
+    super.key,
+    required this.weatherCondition,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +24,11 @@ class WeatherUnitSettingView extends StatelessWidget {
             Icon(weatherCondition.icon.icon, size: 100),
             Text(weatherCondition.name),
             SizedBox(height: 16),
-            ListTile(
-              title: Text('Uwzględnij w prognozie'),
-              trailing: Switch(value: false, onChanged: (value) {}),
+            Container(
+              width: 400,
+              height: 400,
+              color: Theme.of(context).colorScheme.surfaceContainer,
+              child: Center(child: Text("Presentation")),
             ),
           ],
         ),
