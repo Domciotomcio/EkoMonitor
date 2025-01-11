@@ -1,7 +1,9 @@
 import 'package:ekomonitor/data/weather-condition-description-list.dart';
 import 'package:ekomonitor/models/weather-condition-description.dart';
 import 'package:ekomonitor/models/weather-condition-unit.dart';
+import 'package:ekomonitor/providers/user_provider.dart';
 import 'package:ekomonitor/views/developer-view.dart';
+import 'package:ekomonitor/views/login_view.dart';
 import 'package:ekomonitor/views/settings/weather-unit-setting-view.dart';
 import 'package:ekomonitor/views/weather-unit-view.dart';
 import 'package:ekomonitor/widgets/main-tile.dart';
@@ -104,13 +106,16 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userProvider);
     final theme = ref.watch(themeNotifierProvider);
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: theme,
-      initialRoute: '/form',
+      //initialRoute: '/form',
+      home: user == null ? LoginView() : HomePage(),
       routes: {
-        '/': (context) => HomePage(),
+        '/home': (context) => HomePage(),
         '/weather-settings': (context) => const WeatherSettingsView(),
         '/app-settings': (context) => const AppSettingsView(),
         '/user-settings': (context) => const UserSettingsView(),

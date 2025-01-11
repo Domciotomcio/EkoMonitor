@@ -1,12 +1,14 @@
 import 'dart:developer';
 
+import 'package:ekomonitor/providers/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class UserSettingsView extends StatelessWidget {
+class UserSettingsView extends ConsumerWidget {
   const UserSettingsView({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Ustawienia użytkownika'),
@@ -62,7 +64,13 @@ class UserSettingsView extends StatelessWidget {
             ),
             SizedBox(height: 16),
             FilledButton.icon(
-                onPressed: () {},
+                onPressed: () {
+                  log('Logout');
+                  ref.read(userProvider.notifier).logout();
+
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, '/home', (route) => false);
+                },
                 label: Text("Wyloguj"),
                 icon: Icon(Icons.logout)),
           ],
