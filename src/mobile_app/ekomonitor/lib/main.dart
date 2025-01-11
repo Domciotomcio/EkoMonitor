@@ -11,6 +11,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'data/main-tile-dic.dart';
 
+import 'views/form/form-view.dart';
 import 'views/settings/app-settings-view.dart';
 import 'views/settings/user-settings-view.dart';
 import 'views/settings/weather-settings-view.dart';
@@ -107,7 +108,7 @@ class MyApp extends ConsumerWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: theme,
-      initialRoute: '/user-settings',
+      initialRoute: '/form',
       routes: {
         '/': (context) => HomePage(),
         '/weather-settings': (context) => const WeatherSettingsView(),
@@ -116,6 +117,7 @@ class MyApp extends ConsumerWidget {
         ...generateWeatherSettingsRoutes(wthrConDescList),
         ...generateWeatherRoutes(wthrConDescList),
         '/developer': (context) => DeveloperView(),
+        '/form': (context) => FormView(),
       },
     );
   }
