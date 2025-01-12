@@ -1,8 +1,10 @@
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from tenserflow.keras.models import Sequential
-from tenserflow.keras.layers import Dense
+import os
+os.environ["KERAS_BACKEND"] = "tensorflow"
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
 import requests
 import datetime as dt
 import json

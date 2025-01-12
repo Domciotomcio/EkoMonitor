@@ -1,0 +1,9 @@
+requests
+openmeteo-requests
+fastapi
+numpy
+pandas
+uvicorn
+tensorflow
+keras
+scikit-learn

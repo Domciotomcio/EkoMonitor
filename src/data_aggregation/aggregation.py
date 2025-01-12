@@ -41,7 +41,7 @@ def get_historical_weather(lat, lon, start, end):
     return json.dumps(data)
 
 # Get air quality data from OpenMeteo API
-def get_air_quality(lat, lon, days=(dt.datetime.now(), dt.datetime.now())):
+def get_air_quality(lat, lon, days=None):
     """
     Get air quality data (pm10, pm2.5 and European AQI) from OpenMeteo API
     :param lat: Latitude
@@ -52,6 +52,8 @@ def get_air_quality(lat, lon, days=(dt.datetime.now(), dt.datetime.now())):
              for each day in the range of days the array will contain 24 values, one for each hour from 00:00 to 23:00, after which the next day starts
              the tuple contains the start and end date
     """
+    if days is None:
+        days = (dt.datetime.now(), dt.datetime.now())
     openmeteo = openmeteo_requests.Client()
 
     url = "https://air-quality-api.open-meteo.com/v1/air-quality"
@@ -60,7 +62,7 @@ def get_air_quality(lat, lon, days=(dt.datetime.now(), dt.datetime.now())):
         "longitude": lon,
         "hourly": ["pm10", "pm2_5", "european_aqi"],
         "start_date": days[0].strftime("%Y-%m-%d"),
-	    "end_date": days[1].strftime("%Y-%m-%d")
+        "end_date": days[1].strftime("%Y-%m-%d")
     }
     responses = openmeteo.weather_api(url, params=params)
     hourly = responses[0].Hourly()
