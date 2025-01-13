@@ -14,4 +14,14 @@ class WthrConDesc {
   });
 
   String get settingsPath => '/weather-settings/$path';
+
+  // TODO: icon and what about path?
+  factory WthrConDesc.fromJson(Map<String, dynamic> json) {
+    return WthrConDesc(
+      name: json['name'],
+      description: json['description'],
+      icon: Icon(Icons.cloud_outlined),
+      path: json['path'],
+    );
+  }
 }

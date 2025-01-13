@@ -1,0 +1,1 @@
+const String BASE_URL = 'https://ekomonitor.herokuapp.com'; // TODO: Change this to the actual base URL of the API
