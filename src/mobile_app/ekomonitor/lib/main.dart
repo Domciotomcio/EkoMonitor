@@ -8,6 +8,7 @@ import 'package:ekomonitor/themes/theme1.dart';
 import 'package:ekomonitor/views/developer-view.dart';
 import 'package:ekomonitor/views/login_view.dart';
 import 'package:ekomonitor/views/settings/weather-unit-setting-view.dart';
+import 'package:ekomonitor/views/test/hourly_test_view.dart';
 import 'package:ekomonitor/views/weather-unit-view.dart';
 import 'package:ekomonitor/widgets/main-tile.dart';
 import 'package:ekomonitor/widgets/weather-condition-tile.dart';
@@ -81,6 +82,7 @@ class MyApp extends ConsumerWidget {
       //initialRoute: '/form',
       home: user == null ? LoginView() : HomePage(),
       routes: {
+
         '/login': (context) => LoginView(),
         '/home': (context) => HomePage(),
         '/weather-settings': (context) => const WeatherSettingsView(),
@@ -90,6 +92,7 @@ class MyApp extends ConsumerWidget {
         ...generateWeatherRoutes(wthrConDescList),
         '/developer': (context) => DeveloperView(),
         '/form': (context) => FormView(),
+        '/hourly-test': (context) => HourlyTestView(),
       },
     );
   }
