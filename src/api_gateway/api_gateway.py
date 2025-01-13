@@ -7,8 +7,8 @@ app = FastAPI()
 
 # Services and their base URLs
 services = {
-    "user_management": "http://localhost:8001/users",
-    "user_profiling": "http://localhost:8002/user_answers"  
+    "user_management": "http://localhost:8004/users",
+    "user_profiling": "http://localhost:8005/user_answers"  
 }
 
 async def forward_request(service_url: str, method: str, path: str, body=None, headers=None):
@@ -43,4 +43,4 @@ async def gateway(service: str, path: str, request: Request):
 
 if __name__ == '__main__':
     print("Starting the FastAPI application...")
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8003)
