@@ -7,3 +7,4 @@ uvicorn
 tensorflow
 keras
 scikit-learn
+pymongo

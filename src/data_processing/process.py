@@ -1,6 +1,14 @@
 import json
 import datetime as dt
 import requests
+import os
+import pymongo
+
+db_password = os.getenv("DB_PASSWORD")
+uri = f"mongodb+srv://EkoMonitorAdmit:{db_password}@ekomonitor.kcnzk.mongodb.net/?retryWrites=true&w=majority&appName=EkoMonitor"
+delta = 0.1
+
+
 
 def process_weather_data(data):
     """
