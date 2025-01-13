@@ -1,9 +1,9 @@
-import json
 import datetime as dt
+import pymongo.mongo_client
 import requests
 import os
 import pymongo
-import math
+from copy import deepcopy
 
 db_password = os.getenv("DB_PASSWORD")
 uri = f"mongodb+srv://EkoMonitorAdmit:{db_password}@ekomonitor.kcnzk.mongodb.net/?retryWrites=true&w=majority&appName=EkoMonitor"
@@ -131,7 +131,6 @@ def process_pollen_data(data):
         - cottonwood: Cottonwood pollen index
         - oak: Oak pollen index
         - pine: Pine pollen index
-
     """
     dd = data["dailyInfo"][0]
     result = {
@@ -166,7 +165,7 @@ def process_hourly(weather, air_quality, pollen):
     pollen_data = process_pollen_data(pollen)
     h = dt.datetime.now().hour
     return {
-        "timestamp": dt.datetime.now().timestamp(),
+        "timestamp": int(dt.datetime.now().replace(microsecond=0, minute=0, second=0).timestamp()),
         "location": {
             "latitude": weather_data["lat"],
             "longitude": weather_data["lon"],
@@ -292,10 +291,35 @@ def process_hourly_request(lat, lon):
 
     :return: results of process_hourly with data from aggregation API
     """
+    client = pymongo.mongo_client.MongoClient(uri)
+    db = client["EkoMonitor"]
+    collection = db["processed_data_with_pollen"]
+    existing_result = collection.find_one({
+        "location.latitude": {"$gt": lat-delta, "$lt": lat+delta},
+        "location.longitude": {"$gt": lon-delta, "$lt": lon+delta},
+        "timestamp": int(dt.datetime.now().replace(microsecond=0, minute=0, second=0).timestamp())
+    })
+    if existing_result:
+        existing_result.pop("_id")
+        return existing_result
+
     url=f"http://127.0.0.1:8000/current/all?lat={lat}&lon={lon}"
     response = requests.get(url)
     resp = response.json()
-    return process_hourly(resp["weather"], resp["air_quality"], resp["pollen"])
+    result = process_hourly(resp["weather"], resp["air_quality"], resp["pollen"])
+    collection.insert_one(result)
+
+    collection2 = db["processed_data_no_pollen"]
+    if collection2.count_documents({
+        "location.latitude": {"$gt": lat-delta, "$lt": lat+delta},
+        "location.longitude": {"$gt": lon-delta, "$lt": lon+delta},
+        "timestamp": result["timestamp"]
+    }) == 0:
+        r2 = deepcopy(result)
+        r2["weather_conditions"].pop("pollen")
+        collection2.insert_one(r2)
+    result.pop("_id")
+    return result
 
 
 def process_historical_data(weather, air_quality):
@@ -318,7 +342,7 @@ def process_historical_data(weather, air_quality):
     result["weather_data"] = {}
     i = 0
     for time in weather_data["dt"]:
-        result["weather_data"][time] = {
+        result["weather_data"][int(time.timestamp())] = {
             "precipitation": {
                 "value": weather_data["precipitation"][i],
                 "unit": "mm/h"
@@ -383,11 +407,52 @@ def process_historical_request(lat, lon, start, end):
 
     :return: results of process_hourly with data from aggregation API
     """
+
+    client = pymongo.mongo_client.MongoClient(uri)
+    db = client["EkoMonitor"]
+    collection = db["processed_data_no_pollen"]
+    st = int(dt.datetime.fromtimestamp(start).replace(microsecond=0, minute=0, second=0, hour=0).timestamp())
+    en = int(dt.datetime.fromtimestamp(end).replace(microsecond=0, minute=0, second=0, hour=23).timestamp())
+    missing = []
+    existing_result = collection.find({
+        "location.latitude": {"$gt": lat-delta, "$lt": lat+delta},
+        "location.longitude": {"$gt": lon-delta, "$lt": lon+delta},
+        "timestamp": {"$gt": st-1, "$lt": en+1}
+    })
+    existing_list = existing_result.to_list()
+    existing_set = {x["timestamp"] for x in existing_list}
+    for i in range(st, en+1, 3600):
+        if i not in existing_set:
+            missing.append(i)
+    if missing == []:
+        result = {
+            "location": {
+                "latitude": lat,
+                "longitude": lon,
+            },
+            "weather_data": {}
+        }
+        for f in existing_list:
+            f.pop("_id")
+            result["weather_data"][f["timestamp"]] = f["weather_conditions"]
+        return result
+
     url=f"http://127.0.0.1:8000/historical/all?lat={lat}&lon={lon}&start={start}&end={end}"
     response = requests.get(url)
     resp = response.json()
-    return process_historical_data(resp["weather"], resp["air_quality"])
+    result = process_historical_data(resp["weather"], resp["air_quality"])
+    missing_result = [{
+        "timestamp": m,
+        "location": {
+            "latitude": lat,
+            "longitude": lon,
+        },
+        "weather_conditions": result["weather_data"][m]
+        } for m in result["weather_data"] if m in missing]
+    if missing_result != []:
+        collection.insert_many(missing_result)
 
+    return result
 
 # for testing only
 if __name__ == "__main__":
