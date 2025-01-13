@@ -17,7 +17,7 @@ def get_weather_forecast(lat, lon, days=None):
              the second tuple contains the start and end date
     """
     if days is None:
-        days = (dt.datetime.now(), dt.datetime.now())
+        days = (dt.datetime.now().timestamp(), dt.datetime.now().timestamp())
     openmeteo = openmeteo_requests.Client()
 
     url = "https://api.open-meteo.com/v1/forecast"
@@ -60,7 +60,7 @@ def get_air_quality(lat, lon, days=None):
              the second tuple contains the start and end date
     """
     if days is None:
-        days = (dt.datetime.now(), dt.datetime.now())
+        days = (dt.datetime.now().timestamp(), dt.datetime.now().timestamp())
     openmeteo = openmeteo_requests.Client()
 
     url = "https://air-quality-api.open-meteo.com/v1/air-quality"

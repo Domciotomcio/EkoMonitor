@@ -3,101 +3,109 @@ import datetime as dt
 import requests
 import os
 import pymongo
+import math
 
 db_password = os.getenv("DB_PASSWORD")
 uri = f"mongodb+srv://EkoMonitorAdmit:{db_password}@ekomonitor.kcnzk.mongodb.net/?retryWrites=true&w=majority&appName=EkoMonitor"
 delta = 0.1
 
 
-
 def process_weather_data(data):
     """
-    Function to process weather data from OpenWeatherMap API
+    Function to process weather data from OpenMeteo API
 
-    :param data: JSON data from OpenWeatherMap API
+    :param data: List of nine numpy arrays and two tuples:
+        - temperature_2m: List of hourly temperature values
+        - relative_humidity_2m: List of hourly relative humidity values
+        - precipitation_probability: List of hourly precipitation probability values
+        - precipitation: List of hourly precipitation values
+        - surface_pressure: List of hourly surface pressure values
+        - cloud_cover: List of hourly cloud cover values
+        - visibility: List of hourly visibility values
+        - wind_speed_10m: List of hourly wind speed values
+        - wind_direction_10m: List of hourly wind direction values
+        - location: Tuple of two floats, latitude and longitude
+        - days: Tuple of two ints, start and end date as UNIX timestamps
+        For each day in the range of days the array will contain 24 values, one for each hour from 00:00 to 23:00, after which the next day starts
 
-    :return: Dictionary containing processed weather data
+    :return: Dictionary containing processed weather data.
         - lat: Latitude
         - lon: Longitude
-        - dt: Time of data calculation, unix, UTC
-        - precipitation: Precipitation volume, mm/h
-        - precipitation_type: Type of precipitation in string form: "rain", "snow" or "none"
-        - clouds: Cloudiness, %
-        - temperature: Temperature, Celsius
-        - pressure: Atmospheric pressure on the sea level, hPa
-        - humidity: Humidity, %
-        - visibility: Visibility, meter (max 10km)
-        - wind_speed: Wind speed, m/s
-        - wind_degrees: Wind direction, degrees (meteorological)
+        - dt: Date and time of data as list of datetime
+        - precipitation: list of Precipitation volume, mm/h
+        - precipitation_probability: list of Probability of precipitation with more than 0.1 mm of the preceding hour, %
+        - cloud_cover: list of Total cloud cover as an area fraction, %
+        - temperature: list of Temperature, Celsius
+        - pressure: list of Surface pressure, hPa
+        - humidity: list of Relative humidity, %
+        - visibility: list of Visibility, meter
+        - wind_speed: list of Wind speed, m/s
+        - wind_degrees: list of Wind direction, degrees
     """
-    dd = json.loads(data)
+
+    temperature_2m = data["temperature_2m"]
+    relative_humidity_2m = data["relative_humidity_2m"]
+    precipitation_probability = data["precipitation_probability"]
+    precipitation = data["precipitation"]
+    surface_pressure = data["surface_pressure"]
+    cloud_cover = data["cloud_cover"]
+    visibility = data["visibility"]
+    wind_speed_10m = data["wind_speed_10m"]
+    wind_direction_10m = data["wind_direction_10m"]
+    lat = data["location"][0]
+    lon = data["location"][1]
+    dt_start = dt.datetime.fromtimestamp(data["days"][0], tz=dt.timezone.utc)
+    dt_start = dt_start.replace(hour=0, minute=0, second=0, microsecond=0)
+    dt_list = [dt_start + dt.timedelta(hours=i) for i in range(len(temperature_2m))]
     return {
-        "lat": dd["coord"]["lat"],
-        "lon": dd["coord"]["lon"],
-        "dt": dd["dt"],
-        "precipitation": dd["rain"]["1h"] if "rain" in dd else dd["snow"]["1h"] if "snow" in dd else 0,
-        "precipitation_type": "rain" if "rain" in dd else "snow" if "snow" in dd else "none",
-        "clouds": dd["clouds"]["all"],
-        "temperature": dd["main"]["temp"],
-        "pressure": dd["main"]["pressure"],
-        "humidity": dd["main"]["humidity"],
-        "visibility": dd["visibility"],
-        "wind_speed": dd["wind"]["speed"],
-        "wind_degrees": dd["wind"]["deg"],
+        "lat": lat,
+        "lon": lon,
+        "dt": dt_list,
+        "precipitation": precipitation,
+        "precipitation_probability": precipitation_probability,
+        "clouds": cloud_cover,
+        "temperature": temperature_2m,
+        "pressure": surface_pressure,
+        "humidity": relative_humidity_2m,
+        "visibility": visibility,
+        "wind_speed": wind_speed_10m,
+        "wind_degrees": wind_direction_10m,
     }
-
-def process_mass_weather_data(data):
-    """
-    Function to process bulk weather data from OpenWeatherMap API
-
-    :param data: JSON data from OpenWeatherMap API
-
-    :return: Dictionary containing processed weather data
-    """
-    dd = json.loads(data)
-    dd = dd["list"]
-    result = {}
-    result["lat"] = dd[0]["coord"]["lat"]
-    result["lon"] = dd[0]["coord"]["lon"]
-    result["list"] = {}
-    for d in dd:
-        result["list"][d["dt"]] = {
-            "lat": d["coord"]["lat"],
-            "lon": d["coord"]["lon"],
-            "precipitation": d["rain"]["1h"] if "rain" in d else d["snow"]["1h"] if "snow" in d else 0,
-            "precipitation_type": "rain" if "rain" in d else "snow" if "snow" in d else "none",
-            "clouds": d["clouds"]["all"],
-            "temperature": d["main"]["temp"],
-            "pressure": d["main"]["pressure"],
-            "humidity": d["main"]["humidity"],
-            "visibility": d["visibility"],
-            "wind_speed": d["wind"]["speed"],
-            "wind_degrees": d["wind"]["deg"],
-        }
-    return result
-
 
 def process_air_quality_data(data):
     """
     Function to process air quality data from OpenMeteo API
 
-    :param data: List of three numpy arrays: hourly_pm10, hourly_pm2_5, hourly_aqi. Each numpy has a number of values equal to 24 * number of days in the range
+    :param data: List of three numpy arrays and two tuples:
+        - hourly_pm10: List of hourly pm10 values
+        - hourly_pm2_5: List of hourly pm2.5 values
+        - hourly_aqi: List of hourly European AQI values
+        - location: Tuple of two floats, latitude and longitude
+        - days: Tuple of two ints, start and end date as UNIX timestamps
 
     :return: Dictionary containing processed air quality data.
+        - lat: Latitude
+        - lon: Longitude
+        - dt: Date and time of data as datetime
         - pm10: List of hourly pm10 values
         - pm2_5: List of hourly pm2.5 values
         - aqi: List of hourly European AQI values
-        - days: Tuple of two datetime objects, start and end date
     """
     pm10 = data["pm10"]
     pm2_5 = data["pm2_5"]
     aqi = data["aqi"]
-    days = data["days"]
+    lat = data["location"][0]
+    lon = data["location"][1]
+    dt_start = dt.datetime.fromtimestamp(data["days"][0], tz=dt.timezone.utc)
+    dt_start = dt_start.replace(hour=0, minute=0, second=0, microsecond=0)
+    dt_list = [dt_start + dt.timedelta(hours=i) for i in range(len(pm10))]
     return {
+        "lat": lat,
+        "lon": lon,
+        "dt": dt_list,
         "pm10": pm10,
         "pm2_5": pm2_5,
         "aqi": aqi,
-        "days": days,
     }
 
 
@@ -125,7 +133,7 @@ def process_pollen_data(data):
         - pine: Pine pollen index
 
     """
-    dd = json.loads(data)["dailyInfo"][0]
+    dd = data["dailyInfo"][0]
     result = {
         "day": dt.datetime(year=dd["date"]["year"], month=dd["date"]["month"], day=dd["date"]["day"], tzinfo=dt.timezone.utc).timestamp()
     }
@@ -157,7 +165,7 @@ def process_hourly(weather, air_quality, pollen):
     air_quality_data = process_air_quality_data(air_quality)
     pollen_data = process_pollen_data(pollen)
     h = dt.datetime.now().hour
-    return json.dumps(str({
+    return {
         "timestamp": dt.datetime.now().timestamp(),
         "location": {
             "latitude": weather_data["lat"],
@@ -165,48 +173,51 @@ def process_hourly(weather, air_quality, pollen):
         },
         "weather_conditions": {
             "precipitation": {
-                "value": weather_data["precipitation"],
-                "type": weather_data["precipitation_type"],
+                "value": weather_data["precipitation"][h],
                 "unit": "mm/h"
             },
+            "precipitation_probability": {
+                "value": weather_data["precipitation_probability"][h],
+                "unit": "%"
+            },
             "cloudiness": {
-                "value": weather_data["clouds"],
+                "value": weather_data["clouds"][h],
                 "unit": "%"
             },
             "temperature": {
-                "value": weather_data["temperature"],
+                "value": round(weather_data["temperature"][h]*100)/100,
                 "unit": "°C"
             },
             "pressure": {
-                "value": weather_data["pressure"],
+                "value": round(weather_data["pressure"][h]*100)/100,
                 "unit": "hPa"
             },
             "humidity": {
-                "value": weather_data["humidity"],
+                "value": weather_data["humidity"][h],
                 "unit": "%"
             },
             "visibility": {
-                "value": weather_data["visibility"],
+                "value": weather_data["visibility"][h],
                 "unit": "m"
             },
             "wind_speed": {
-                "value": weather_data["wind_speed"],
+                "value": round(weather_data["wind_speed"][h]*100)/100,
                 "unit": "m/s"
             },
             "wind_direction": {
-                "value": weather_data["wind_degrees"],
+                "value": round(weather_data["wind_degrees"][h]*100)/100,
                 "unit": "°"
             },
             "pm10": {
-                "value": air_quality_data["pm10"][h],
+                "value": round(air_quality_data["pm10"][h]*100)/100,
                 "unit": "µg/m³"
             },
             "pm2_5": {
-                "value": air_quality_data["pm2_5"][h],
+                "value": round(air_quality_data["pm2_5"][h]*100)/100,
                 "unit": "µg/m³"
             },
             "aqi": {
-                "value": air_quality_data["aqi"][h],
+                "value": round(air_quality_data["aqi"][h]*100)/100,
                 "unit": ""
             },
             "pollen": {
@@ -268,9 +279,8 @@ def process_hourly(weather, air_quality, pollen):
                     "unit": ""
                 },
             }
-
         }
-    }))
+    }
 
 
 def process_hourly_request(lat, lon):
@@ -297,7 +307,7 @@ def process_historical_data(weather, air_quality):
 
     :return: Dictionary containing processed historical data
     """
-    weather_data = process_mass_weather_data(weather)
+    weather_data = process_weather_data(weather)
     air_quality_data = process_air_quality_data(air_quality)
 
     result = {}
@@ -307,56 +317,59 @@ def process_historical_data(weather, air_quality):
     }
     result["weather_data"] = {}
     i = 0
-    for timestamp, data in weather_data["list"].items():
-        result["weather_data"][timestamp] = {
+    for time in weather_data["dt"]:
+        result["weather_data"][time] = {
             "precipitation": {
-                "value": data["precipitation"],
-                "type": data["precipitation_type"],
+                "value": weather_data["precipitation"][i],
                 "unit": "mm/h"
             },
+            "precipitation_probability": {
+                "value": weather_data["precipitation_probability"][i],
+                "unit": "%"
+            },
             "cloudiness": {
-                "value": data["clouds"],
+                "value": weather_data["clouds"][i],
                 "unit": "%"
             },
             "temperature": {
-                "value": data["temperature"],
+                "value": round(weather_data["temperature"][i]*100)/100,
                 "unit": "°C"
             },
             "pressure": {
-                "value": data["pressure"],
+                "value": round(weather_data["pressure"][i]*100)/100,
                 "unit": "hPa"
             },
             "humidity": {
-                "value": data["humidity"],
+                "value": weather_data["humidity"][i],
                 "unit": "%"
             },
             "visibility": {
-                "value": data["visibility"],
+                "value": weather_data["visibility"][i],
                 "unit": "m"
             },
             "wind_speed": {
-                "value": data["wind_speed"],
+                "value": round(weather_data["wind_speed"][i]*100)/100,
                 "unit": "m/s"
             },
             "wind_direction": {
-                "value": data["wind_degrees"],
+                "value": round(weather_data["wind_degrees"][i]*100)/100,
                 "unit": "°"
             },
             "pm10": {
-                "value": air_quality_data["pm10"][i],
+                "value": round(air_quality_data["pm10"][i]*100)/100,
                 "unit": "µg/m³"
             },
             "pm2_5": {
-                "value": air_quality_data["pm2_5"][i],
+                "value": round(air_quality_data["pm2_5"][i]*100)/100,
                 "unit": "µg/m³"
             },
             "aqi": {
-                "value": air_quality_data["aqi"][i],
+                "value": round(air_quality_data["aqi"][i]*100)/100,
                 "unit": ""
             },
         }
         i += 1
-    return json.dumps(str(result))
+    return result
 
 
 def process_historical_request(lat, lon, start, end):
@@ -378,5 +391,5 @@ def process_historical_request(lat, lon, start, end):
 
 # for testing only
 if __name__ == "__main__":
-
     print(process_hourly_request(51, 17))
+    print(process_historical_request(51, 17, 1736366964, 1736626164))
