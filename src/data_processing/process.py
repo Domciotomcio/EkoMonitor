@@ -454,6 +454,36 @@ def process_historical_request(lat, lon, start, end):
 
     return result
 
+
+def get_whole_database_nopollen():
+    """
+    Function to get the whole database of processed data without pollen
+
+    :return: List of all entries in the database
+    """
+    client = pymongo.mongo_client.MongoClient(uri)
+    db = client["EkoMonitor"]
+    collection = db["processed_data_no_pollen"]
+    result = collection.find({}).to_list()
+    for r in result:
+        r.pop("_id")
+    return result
+
+
+def get_whole_database_withpollen():
+    """
+    Function to get the whole database of processed data with pollen
+
+    :return: List of all entries in the database
+    """
+    client = pymongo.mongo_client.MongoClient(uri)
+    db = client["EkoMonitor"]
+    collection = db["processed_data_with_pollen"]
+    result = collection.find({}).to_list()
+    for r in result:
+        r.pop("_id")
+    return result
+
 # for testing only
 if __name__ == "__main__":
     print(process_hourly_request(51, 17))
