@@ -1,7 +1,10 @@
 import 'package:ekomonitor/data/weather-condition-description-list.dart';
+import 'package:ekomonitor/functions/logout_function.dart';
 import 'package:ekomonitor/models/weather-condition-description.dart';
 import 'package:ekomonitor/models/weather-condition-unit.dart';
+import 'package:ekomonitor/providers/theme_provider.dart';
 import 'package:ekomonitor/providers/user_provider.dart';
+import 'package:ekomonitor/themes/theme1.dart';
 import 'package:ekomonitor/views/developer-view.dart';
 import 'package:ekomonitor/views/login_view.dart';
 import 'package:ekomonitor/views/settings/weather-unit-setting-view.dart';
@@ -21,43 +24,6 @@ import 'views/settings/weather-settings-view.dart';
 void main() {
   runApp(const ProviderScope(child: MyApp()));
 }
-
-final ThemeData theme1 = ThemeData(
-  colorScheme: ColorScheme.fromSeed(
-    seedColor: const Color.fromARGB(255, 173, 52, 52),
-    brightness: Brightness.light,
-  ),
-  useMaterial3: true,
-);
-
-final ThemeData theme2 = ThemeData(
-  colorScheme: ColorScheme.fromSeed(
-    seedColor: const Color.fromARGB(255, 82, 68, 183),
-    brightness: Brightness.light,
-  ),
-  useMaterial3: true,
-);
-
-final ThemeData theme3 = ThemeData(
-  colorScheme: ColorScheme.fromSeed(
-    seedColor: const Color.fromARGB(255, 52, 173, 52),
-    brightness: Brightness.light,
-  ),
-  useMaterial3: true,
-);
-
-class ThemeNotifier extends StateNotifier<ThemeData> {
-  ThemeNotifier() : super(theme1);
-
-  void setTheme(ThemeData theme) {
-    state = theme;
-  }
-}
-
-final themeNotifierProvider =
-    StateNotifierProvider<ThemeNotifier, ThemeData>((ref) {
-  return ThemeNotifier();
-});
 
 const MAIN_TILE_CODE = 'rainy';
 
@@ -115,6 +81,7 @@ class MyApp extends ConsumerWidget {
       //initialRoute: '/form',
       home: user == null ? LoginView() : HomePage(),
       routes: {
+        '/login': (context) => LoginView(),
         '/home': (context) => HomePage(),
         '/weather-settings': (context) => const WeatherSettingsView(),
         '/app-settings': (context) => const AppSettingsView(),
@@ -158,8 +125,22 @@ class HomePage extends ConsumerWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
-        title: const Text('Witaj Developerze'),
+        title: ref.watch(userProvider) != null
+            ? Text('Witaj ${ref.watch(userProvider)!.name}')
+            : const Text('Witaj w aplikacji Ekomonitor'),
         actions: [
+          // user logged
+          if (ref.watch(userProvider) != null)
+            IconButton(
+              icon: const Icon(Icons.logout),
+              onPressed: () => logoutFunction(context, ref),
+            ),
+          if (ref.watch(userProvider) == null)
+            IconButton(
+              icon: const Icon(Icons.login),
+              onPressed: () => Navigator.pushNamed(context, '/login'),
+            ),
+
           IconButton(
             icon: const Icon(Icons.warning),
             onPressed: () {

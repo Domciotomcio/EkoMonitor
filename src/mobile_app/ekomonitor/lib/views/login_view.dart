@@ -42,22 +42,23 @@ class _LoginViewState extends ConsumerState<LoginView> {
             SizedBox(height: 16.0),
             _isLoading
                 ? CircularProgressIndicator()
-                :
-            ElevatedButton(
-              onPressed: ()  async{
-                setState(() {
-                  _isLoading = true;
-                });
-                await ref.read(userProvider.notifier).login(_emailController.text, _passwordController.text);
-                setState(() {
-                  _isLoading = false;
-                });
-                if (ref.read(userProvider) != null) {
-                  Navigator.pushReplacementNamed(context, '/home');
-                }
-              },
-              child: Text('Login'),
-            ),
+                : ElevatedButton(
+                    onPressed: () async {
+                      setState(() {
+                        _isLoading = true;
+                      });
+                      await ref.read(userProvider.notifier).login(
+                          _emailController.text, _passwordController.text);
+                      setState(() {
+                        _isLoading = false;
+                      });
+                      if (ref.read(userProvider) != null) {
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, '/home', (route) => false);
+                      }
+                    },
+                    child: Text('Login'),
+                  ),
           ],
         ),
       ),
