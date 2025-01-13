@@ -9,6 +9,7 @@ import 'package:ekomonitor/views/developer-view.dart';
 import 'package:ekomonitor/views/login_view.dart';
 import 'package:ekomonitor/views/settings/weather-unit-setting-view.dart';
 import 'package:ekomonitor/views/test/hourly_test_view.dart';
+import 'package:ekomonitor/views/test/user_test_view.dart';
 import 'package:ekomonitor/views/weather-unit-view.dart';
 import 'package:ekomonitor/widgets/main-tile.dart';
 import 'package:ekomonitor/widgets/weather-condition-tile.dart';
@@ -79,8 +80,8 @@ class MyApp extends ConsumerWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: theme,
-      //initialRoute: '/form',
-      home: user == null ? LoginView() : HomePage(),
+      initialRoute: '/user-test',
+      //home: user == null ? LoginView() : HomePage(),
       routes: {
 
         '/login': (context) => LoginView(),
@@ -93,6 +94,7 @@ class MyApp extends ConsumerWidget {
         '/developer': (context) => DeveloperView(),
         '/form': (context) => FormView(),
         '/hourly-test': (context) => HourlyTestView(),
+        '/user-test': (context) => UserTestView(),
       },
     );
   }
@@ -129,7 +131,7 @@ class HomePage extends ConsumerWidget {
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         title: ref.watch(userProvider) != null
-            ? Text('Witaj ${ref.watch(userProvider)!.name}')
+            ? Text('Witaj ${ref.watch(userProvider)!.firstName}')
             : const Text('Witaj w aplikacji Ekomonitor'),
         actions: [
           // user logged

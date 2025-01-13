@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:ekomonitor/models/user.dart';
+import 'package:ekomonitor/data/user/models/user_model.dart';
 import 'package:ekomonitor/notifiers/user-notifier.dart';
 import 'package:ekomonitor/providers/user_provider.dart';
 import 'package:flutter/material.dart';
