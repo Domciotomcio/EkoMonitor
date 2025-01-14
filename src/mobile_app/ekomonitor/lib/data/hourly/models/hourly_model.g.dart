@@ -11,7 +11,7 @@ HourlyModel _$HourlyModelFromJson(Map<String, dynamic> json) => HourlyModel(
       location:
           LocationModel.fromJson(json['location'] as Map<String, dynamic>),
       weatherConditions:
-          (json['weatherConditions'] as Map<String, dynamic>).map(
+          (json['weather_conditions'] as Map<String, dynamic>).map(
         (k, e) =>
             MapEntry(k, MeasurementModel.fromJson(e as Map<String, dynamic>)),
       ),
@@ -21,5 +21,5 @@ Map<String, dynamic> _$HourlyModelToJson(HourlyModel instance) =>
     <String, dynamic>{
       'timestamp': instance.timestamp,
       'location': instance.location,
-      'weatherConditions': instance.weatherConditions,
+      'weather_conditions': instance.weatherConditions,
     };

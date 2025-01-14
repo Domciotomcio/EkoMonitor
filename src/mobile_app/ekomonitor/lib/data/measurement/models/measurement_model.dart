@@ -4,7 +4,7 @@ part 'measurement_model.g.dart';
 
 @JsonSerializable()
 class MeasurementModel {
-  final int value;
+  final double value;
   final String unit;
 
   MeasurementModel({

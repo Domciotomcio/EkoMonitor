@@ -9,6 +9,7 @@ class MockWthrConUnitService implements WthrConUnitService {
     return WthrConUnit(
       wthrConDesc: WthrConDesc(
         name: 'mock name',
+        fixedName: 'mock fixedName',
         description: 'mock description',
         icon: Icon(Icons.ice_skating_outlined),
         path: '',

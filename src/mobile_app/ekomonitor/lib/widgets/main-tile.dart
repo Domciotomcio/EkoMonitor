@@ -1,5 +1,6 @@
 import 'package:ekomonitor/data/main-tile-dic.dart';
 import 'package:ekomonitor/main.dart';
+import 'package:ekomonitor/views/home/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

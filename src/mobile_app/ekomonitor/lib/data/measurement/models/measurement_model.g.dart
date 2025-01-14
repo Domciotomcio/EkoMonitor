@@ -8,7 +8,7 @@ part of 'measurement_model.dart';
 
 MeasurementModel _$MeasurementModelFromJson(Map<String, dynamic> json) =>
     MeasurementModel(
-      value: (json['value'] as num).toInt(),
+      value: (json['value'] as num).toDouble(),
       unit: json['unit'] as String,
     );
 

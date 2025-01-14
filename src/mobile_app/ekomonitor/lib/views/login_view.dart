@@ -1,3 +1,5 @@
+import 'package:ekomonitor/data/const.dart';
+import 'package:ekomonitor/data/hourly/providers/hourly_provider.dart';
 import 'package:ekomonitor/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -51,6 +53,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                       });
                       await ref.read(userProvider.notifier).login(
                           _emailController.text, _passwordController.text);
+                      await ref.read(hourlyProvider.notifier).fetchHourly(LATITUDE, LONGITUDE);
                       setState(() {
                         _isLoading = false;
                       });

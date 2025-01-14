@@ -8,9 +8,14 @@ part 'hourly_model.g.dart';
 class HourlyModel {
   final int timestamp;
   final LocationModel location;
+  // json key "weather_conditions"
+  @JsonKey(name: 'weather_conditions')
   Map<String, MeasurementModel> weatherConditions;
 
-  HourlyModel({required this.timestamp, required this.location, required this.weatherConditions});
+  HourlyModel(
+      {required this.timestamp,
+      required this.location,
+      required this.weatherConditions});
 
   DateTime get dateTime =>
       DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
