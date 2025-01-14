@@ -47,8 +47,8 @@ def api_read_user_answer(answer_id: int):
 
 # Endpoint for updating user answer
 @app.put("/user_answers/{answer_id}", response_model=int)
-def api_update_user_answer(answer_id: int, user_answer: UserAnswerUpdate):
-    existing_user_answer = read_user_answer(answer_id)
+def api_update_user_answer(user_answer: UserAnswerUpdate):
+    existing_user_answer = read_user_answer(user_answer.user_id)
     if existing_user_answer is None:
         raise HTTPException(status_code=404, detail="User answer not found")
     
@@ -62,7 +62,7 @@ def api_update_user_answer(answer_id: int, user_answer: UserAnswerUpdate):
     }
     
     updated_rows = update_user_answer(
-        answer_id,
+        updated_user_answer["user_id"],
         updated_user_answer["user_id"],
         updated_user_answer["outdoor_activities"],
         updated_user_answer["health_concerns"],

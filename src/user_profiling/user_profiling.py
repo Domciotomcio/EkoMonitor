@@ -7,11 +7,17 @@ from sklearn.preprocessing import LabelEncoder
 import os
 
 # Database connection parameters
-DB_NAME     = os.getenv("DB_NAME")
-DB_USER    = os.getenv("DB_USER")
-DB_PASSWORD = os.getenv("DB_PASSWORD")
-DB_HOST     = os.getenv("DB_HOST")
-DB_PORT    = os.getenv("DB_PORT")
+# DB_NAME     = os.getenv("DB_NAME")
+# DB_USER    = os.getenv("DB_USER")
+# DB_PASSWORD = os.getenv("DB_PASSWORD")
+# DB_HOST     = os.getenv("DB_HOST")
+# DB_PORT    = os.getenv("DB_PORT")
+
+DB_NAME     = 'ekomonitor'
+DB_USER   = 'admin'
+DB_PASSWORD = 'MBCZ1380'
+DB_HOST     = '40.68.222.189'
+DB_PORT     = '5432'
 
 def connect():
     """ Connect to the PostgreSQL database server """
@@ -103,14 +109,14 @@ def create_user_answer(user_id, outdoor_activities, health_concerns, daily_commu
     }
     profile = predict_profile(model, label_encoders, profile_encoder, answers)
 
-    sql_query = """INSERT INTO user_answers (user_id, outdoor_activities, health_concerns, daily_commute, gardening, weather_interest, profile)
-                   VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING answer_id;"""
+    sql_query = """INSERT INTO user_answers (answer_id, user_id, outdoor_activities, health_concerns, daily_commute, gardening, weather_interest, profile)
+                   VALUES (%s, %s, %s, %s, %s, %s, %s, %s) RETURNING answer_id;"""
     conn = None
     answer_id = None
     try:
         conn = connect()
         cur = conn.cursor()
-        cur.execute(sql_query, (user_id, outdoor_activities, health_concerns, daily_commute, gardening, weather_interest, profile))
+        cur.execute(sql_query, (user_id, user_id, outdoor_activities, health_concerns, daily_commute, gardening, weather_interest, profile))
         answer_id = cur.fetchone()[0]
         conn.commit()
         cur.close()
@@ -123,7 +129,7 @@ def create_user_answer(user_id, outdoor_activities, health_concerns, daily_commu
 
 # Read user answer by answer_id
 def read_user_answer(answer_id):
-    sql_query = """SELECT * FROM user_answers WHERE answer_id = %s;"""
+    sql_query = """SELECT * FROM user_answers WHERE user_id = %s;"""
     conn = None
     user_answer = None
     try:

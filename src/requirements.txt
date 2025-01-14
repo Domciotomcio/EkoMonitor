@@ -8,3 +8,5 @@ tensorflow
 keras
 scikit-learn
 pymongo
+psycopg2
+httpx
