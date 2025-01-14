@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:ekomonitor/data/user_profile/enums/user_profile_enum.dart';
+import 'package:ekomonitor/data/user_profile/providers/user_profile_provider.dart';
 import 'package:ekomonitor/functions/logout_function.dart';
 import 'package:ekomonitor/providers/user_provider.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +13,7 @@ class UserSettingsView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider);
+    final userProfile = ref.watch(userProfileProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -24,8 +27,11 @@ class UserSettingsView extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Icon(Icons.person, size: 100),
-                  Text('Tomasz123', style: const TextStyle(fontSize: 20)),
-                  Text('Tomasz123@gmail.com'),
+                  Text(user.firstName + " " + user.lastName,
+                      style: const TextStyle(fontSize: 20)),
+                  Text(user.email, style: const TextStyle(fontSize: 16)),
+                  Text(userProfile!.userProfile.value,
+                      style: const TextStyle(fontSize: 16)),
                   SizedBox(height: 16),
                   ListTile(
                     title: const Text('Zmień email'),
@@ -63,7 +69,7 @@ class UserSettingsView extends ConsumerWidget {
                     trailing: const Icon(Icons.arrow_right),
                     onTap: () {
                       log('Questioner for user settings');
-                      // Navigator.of(context).pushNamed('/change-password');
+                      Navigator.of(context).pushNamed('/form');
                     },
                   ),
                   SizedBox(height: 16),

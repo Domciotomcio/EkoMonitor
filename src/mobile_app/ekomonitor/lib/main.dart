@@ -1,3 +1,4 @@
+import 'package:ekomonitor/data/user_profile/providers/user_profile_provider.dart';
 import 'package:ekomonitor/data/weather-condition-description-list.dart';
 import 'package:ekomonitor/functions/logout_function.dart';
 import 'package:ekomonitor/models/weather-condition-description.dart';
@@ -18,7 +19,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'data/main-tile-dic.dart';
 
-import 'views/form/form-view.dart';
+import 'views/form/form_view.dart';
 import 'views/settings/app-settings-view.dart';
 import 'views/settings/user-settings-view.dart';
 import 'views/settings/weather-settings-view.dart';
@@ -80,7 +81,7 @@ class MyApp extends ConsumerWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: theme,
-      initialRoute: '/user-test',
+      initialRoute: '/login',
       //home: user == null ? LoginView() : HomePage(),
       routes: {
 

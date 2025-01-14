@@ -1,4 +1,6 @@
 import 'package:ekomonitor/data/questions.dart';
+import 'package:ekomonitor/data/user_profile/providers/user_profile_provider.dart';
+import 'package:ekomonitor/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -8,7 +10,8 @@ class Question {
   final String answerB;
   final String answerC;
   final String answerD;
-  final int? selectedAnswer; // 0, 1, 2, 3
+  final String answerE;
+  final String? selectedAnswer;
 
   Question({
     required this.question,
@@ -16,16 +19,18 @@ class Question {
     required this.answerB,
     required this.answerC,
     required this.answerD,
+    required this.answerE,
     this.selectedAnswer,
   });
 
-  copyWith({required int selectedAnswer}) {
+  copyWith({required String selectedAnswer}) {
     return Question(
       question: question,
       answerA: answerA,
       answerB: answerB,
       answerC: answerC,
       answerD: answerD,
+      answerE: answerE,
       selectedAnswer: selectedAnswer,
     );
   }
@@ -34,7 +39,7 @@ class Question {
 class QuestionsNotifier extends StateNotifier<List<Question>> {
   QuestionsNotifier(List<Question> state) : super(state);
 
-  void selectAnswer(int questionIndex, int answer) {
+  void selectAnswer(int questionIndex, String answer) {
     state = [
       for (int i = 0; i < state.length; i++)
         if (i == questionIndex)
@@ -51,6 +56,8 @@ final questionsProvider =
 });
 
 class FormView extends ConsumerWidget {
+  const FormView({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final questions = ref.watch(questionsProvider);
@@ -102,6 +109,8 @@ class FormView extends ConsumerWidget {
                           );
                           
                         }
+                        final userId = ref.read(userProvider)!.userId;
+                        ref.read(userProfileProvider.notifier).updateUserProfileWithForm(userId, questions);
 
                         // save answers
                         // Navigator.of(context).pop();
@@ -121,9 +130,9 @@ class FormView extends ConsumerWidget {
 
 class QuestionView extends StatelessWidget {
   final Question question;
-  final ValueChanged<int?> onAnswerSelected;
+  final ValueChanged<String?> onAnswerSelected;
 
-  QuestionView({required this.question, required this.onAnswerSelected});
+  QuestionView({super.key, required this.question, required this.onAnswerSelected});
 
   @override
   Widget build(BuildContext context) {
@@ -135,25 +144,31 @@ class QuestionView extends StatelessWidget {
         SizedBox(height: 10),
         RadioListTile(
           title: Text(question.answerA),
-          value: 0,
+          value: 'Very interested',
           groupValue: question.selectedAnswer,
           onChanged: (value) => onAnswerSelected(value),
         ),
         RadioListTile(
           title: Text(question.answerB),
-          value: 1,
+          value: 'Often',
           groupValue: question.selectedAnswer,
           onChanged: (value) => onAnswerSelected(value),
         ),
         RadioListTile(
           title: Text(question.answerC),
-          value: 2,
+          value: 'Sometimes',
           groupValue: question.selectedAnswer,
           onChanged: (value) => onAnswerSelected(value),
         ),
         RadioListTile(
           title: Text(question.answerD),
-          value: 3,
+          value: 'Somewhat concerned',
+          groupValue: question.selectedAnswer,
+          onChanged: (value) => onAnswerSelected(value),
+        ),
+        RadioListTile(
+          title: Text(question.answerD),
+          value: 'Somewhat important',
           groupValue: question.selectedAnswer,
           onChanged: (value) => onAnswerSelected(value),
         ),
