@@ -2,6 +2,10 @@ import psycopg2
 from psycopg2 import errors
 import hashlib
 import os
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 DB_NAME     = os.getenv('DB_NAME')
 DB_USER    = os.getenv('DB_USER')

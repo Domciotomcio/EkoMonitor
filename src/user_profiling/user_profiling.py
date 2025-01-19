@@ -5,6 +5,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import LabelEncoder
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Database connection parameters
 DB_NAME     = os.getenv("DB_NAME")

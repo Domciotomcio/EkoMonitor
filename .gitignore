@@ -1,3 +1,5 @@
 node_modules/
 src/.passwords.txt
 .DS_Store
+src/user_management/.env
+src/user_profiling/.env
