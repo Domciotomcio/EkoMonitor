@@ -20,8 +20,8 @@ class HomePage extends ConsumerWidget {
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         title: ref.watch(userProvider) != null
-            ? Text('Witaj ${ref.watch(userProvider)!.firstName}')
-            : const Text('Witaj w aplikacji Ekomonitor'),
+            ? Text('Welcome ${ref.watch(userProvider)!.firstName}')
+            : const Text('Welcome in Ekomonitor'),
         actions: [
           // user logged
           if (ref.watch(userProvider) != null)
@@ -35,12 +35,12 @@ class HomePage extends ConsumerWidget {
               onPressed: () => Navigator.pushNamed(context, '/login'),
             ),
 
-          IconButton(
-            icon: const Icon(Icons.warning),
-            onPressed: () {
-              Navigator.pushNamed(context, '/developer');
-            },
-          ),
+          // IconButton(
+          //   icon: const Icon(Icons.warning),
+          //   onPressed: () {
+          //     Navigator.pushNamed(context, '/developer');
+          //   },
+          // ),
         ],
       ),
       body: LayoutBuilder(
@@ -69,7 +69,7 @@ class HomeViewMobile extends ConsumerWidget {
           children: [
             MainTile(),
             const Divider(),
-            const Text("Warunki pogodowe"),
+            const Text("Weather conditions"),
             SizedBox(height: 120, child: const WeatherCarousel()),
             const Divider(),
             WorthMentioning(),
@@ -98,7 +98,7 @@ class WorthMentioning extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const Text("Warto zwrócić na to uwagę"),
+        const Text("See the details of the weather conditions"),
         for (int i = 0; i < 3; i++)
           ListTile(
             title: Text(wthrConDescList[i].name),

@@ -8,6 +8,7 @@ class LoginView extends ConsumerStatefulWidget {
   const LoginView({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _LoginViewState createState() => _LoginViewState();
 }
 
@@ -27,6 +28,8 @@ class _LoginViewState extends ConsumerState<LoginView> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Text("Ekomonitor App", style: Theme.of(context).textTheme.displaySmall),
+            const SizedBox(height: 16.0),
             TextField(
               controller: _emailController,
               decoration: const InputDecoration(
@@ -60,6 +63,12 @@ class _LoginViewState extends ConsumerState<LoginView> {
                       if (ref.read(userProvider) != null) {
                         Navigator.pushNamedAndRemoveUntil(
                             context, '/home', (route) => false);
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Login failed'),
+                          ),
+                        );
                       }
                     },
                     child: const Text('Login'),

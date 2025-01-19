@@ -29,7 +29,7 @@ void main() {
   runApp(const ProviderScope(child: MyApp()));
 }
 
-const MAIN_TILE_CODE = 'rainy';
+const MAIN_TILE_CODE = 'default';
 
 final List<WthrConUnit> wthrConUnitList = [
   WthrConUnit(
@@ -52,19 +52,19 @@ final List<WthrConUnit> wthrConUnitList = [
 
 final List<SettingsTileConfig> settingsList = [
   SettingsTileConfig(
-    text: "Ustawienia pogody",
+    text: "Weather settings",
     color: Colors.blue[900]!,
     icon: Icon(Icons.cloud_outlined),
     path: '/weather-settings',
   ),
   const SettingsTileConfig(
-    text: "Ustawienia aplikacji",
+    text: "App settings",
     color: Colors.grey,
     icon: Icon(Icons.settings),
     path: '/app-settings',
   ),
   const SettingsTileConfig(
-    text: "Ustawienia uzytkownika",
+    text: "User settings",
     color: Colors.deepPurple,
     icon: Icon(Icons.person_outline),
     path: '/user-settings',

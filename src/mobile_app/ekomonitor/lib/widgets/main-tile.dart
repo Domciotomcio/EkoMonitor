@@ -1,5 +1,6 @@
 import 'package:ekomonitor/data/main-tile-dic.dart';
 import 'package:ekomonitor/main.dart';
+import 'package:ekomonitor/notifiers/main_tile_notifier.dart';
 import 'package:ekomonitor/views/home/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -34,8 +35,7 @@ class MainTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final myProvider = ref.watch(weatherStatusNotifierProvider);
-    config = myProvider.mainTileConfig;
+    config = ref.watch(mainTileProvider);
 
     return Container(
         width: double.infinity,
