@@ -7,17 +7,11 @@ from sklearn.preprocessing import LabelEncoder
 import os
 
 # Database connection parameters
-# DB_NAME     = os.getenv("DB_NAME")
-# DB_USER    = os.getenv("DB_USER")
-# DB_PASSWORD = os.getenv("DB_PASSWORD")
-# DB_HOST     = os.getenv("DB_HOST")
-# DB_PORT    = os.getenv("DB_PORT")
-
-DB_NAME     = 'ekomonitor'
-DB_USER   = 'admin'
-DB_PASSWORD = 'MBCZ1380'
-DB_HOST     = '40.68.222.189'
-DB_PORT     = '5432'
+DB_NAME     = os.getenv("DB_NAME")
+DB_USER    = os.getenv("DB_USER")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+DB_HOST     = os.getenv("DB_HOST")
+DB_PORT    = os.getenv("DB_PORT")
 
 def connect():
     """ Connect to the PostgreSQL database server """
