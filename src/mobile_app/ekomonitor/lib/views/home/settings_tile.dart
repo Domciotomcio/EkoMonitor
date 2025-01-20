@@ -27,7 +27,8 @@ class SettingsTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: config.color),
         ),
-        width: double.infinity,
+        margin: const EdgeInsets.all(4),
+        height: double.infinity,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(

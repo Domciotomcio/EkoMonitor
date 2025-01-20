@@ -12,13 +12,11 @@ void logoutFunction(BuildContext context, WidgetRef ref) {
   log('Logout');
   ref.read(userProvider.notifier).logout();
   ref.read(mainTileProvider.notifier).setMainTile('default');
-  ref.read(themeNotifierProvider.notifier).setTheme(ThemeData(
-    colorScheme: ColorScheme.fromSeed(
-      seedColor: Colors.purple,
-    ),
-    brightness: Brightness.light,
-
-  ));
-  Navigator.pushNamedAndRemoveUntil(
-      context, '/home', (route) => false);
+  ref.read(themeProvider.notifier).setTheme(ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.purple,
+        ),
+        brightness: Brightness.light,
+      ));
+  Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
 }

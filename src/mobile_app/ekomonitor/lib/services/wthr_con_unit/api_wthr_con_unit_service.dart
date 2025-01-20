@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:ekomonitor/data/const.dart';
-import 'package:ekomonitor/models/weather-condition-unit.dart';
+import 'package:ekomonitor/models/weather_condition_unit.dart';
 import 'package:http/http.dart' as http;
 import 'package:ekomonitor/services/wthr_con_unit/wthr_con_unit_service.dart';
 

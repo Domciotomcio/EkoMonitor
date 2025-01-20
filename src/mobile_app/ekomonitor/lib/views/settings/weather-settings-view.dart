@@ -8,7 +8,7 @@ class WeatherSettingsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Ustawienia pogody'),
+        title: const Text('Weather settings'),
       ),
       body: ListView.builder(
         itemCount: wthrConDescList.length,

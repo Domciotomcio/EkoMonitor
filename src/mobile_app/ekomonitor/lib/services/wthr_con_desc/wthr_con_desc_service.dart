@@ -1,4 +1,4 @@
-import '../../models/weather-condition-description.dart';
+import '../../models/weather_condition_description.dart';
 
 abstract class WthrConDescService {
   Future<List<WthrConDesc>> getWeatherConditions();

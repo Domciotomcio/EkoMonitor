@@ -8,4 +8,12 @@ class ThemeNotifier extends StateNotifier<ThemeData> {
   void setTheme(ThemeData theme) {
     state = theme;
   }
+
+  void setThemeByColor(Color color) {
+    state = ThemeData(
+      colorScheme: ColorScheme.fromSeed(seedColor: color),
+      brightness: Brightness.light,
+      useMaterial3: true
+    );
+  }
 }

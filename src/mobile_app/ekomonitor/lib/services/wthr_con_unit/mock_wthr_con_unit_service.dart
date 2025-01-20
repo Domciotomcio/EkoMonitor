@@ -1,5 +1,5 @@
-import 'package:ekomonitor/models/weather-condition-description.dart';
-import 'package:ekomonitor/models/weather-condition-unit.dart';
+import 'package:ekomonitor/models/weather_condition_description.dart';
+import 'package:ekomonitor/models/weather_condition_unit.dart';
 import 'package:ekomonitor/services/wthr_con_unit/wthr_con_unit_service.dart';
 import 'package:flutter/material.dart';
 

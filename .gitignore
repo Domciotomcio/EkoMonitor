@@ -3,3 +3,7 @@ src/.passwords.txt
 .DS_Store
 src/user_management/.env
 src/user_profiling/.env
+src/data_aggregation/.env
+src/data_processing/.env
+src/data_aggregation/__pycache__/
+src/data_processing/__pycache__/

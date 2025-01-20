@@ -1,8 +1,8 @@
 import 'package:ekomonitor/data/user_profile/providers/user_profile_provider.dart';
 import 'package:ekomonitor/data/weather-condition-description-list.dart';
 import 'package:ekomonitor/functions/logout_function.dart';
-import 'package:ekomonitor/models/weather-condition-description.dart';
-import 'package:ekomonitor/models/weather-condition-unit.dart';
+import 'package:ekomonitor/models/weather_condition_description.dart';
+import 'package:ekomonitor/models/weather_condition_unit.dart';
 import 'package:ekomonitor/providers/theme_provider.dart';
 import 'package:ekomonitor/providers/user_provider.dart';
 import 'package:ekomonitor/themes/theme1.dart';
@@ -77,7 +77,7 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider);
-    final theme = ref.watch(themeNotifierProvider);
+    final theme = ref.watch(themeProvider);
 
     return MaterialApp(
       title: 'Flutter Demo',
@@ -85,7 +85,6 @@ class MyApp extends ConsumerWidget {
       initialRoute: '/login',
       //home: user == null ? LoginView() : HomePage(),
       routes: {
-
         '/login': (context) => LoginView(),
         '/home': (context) => HomePage(),
         '/weather-settings': (context) => const WeatherSettingsView(),
@@ -124,4 +123,3 @@ Map<String, WidgetBuilder> generateWeatherRoutes(
     }),
   );
 }
-

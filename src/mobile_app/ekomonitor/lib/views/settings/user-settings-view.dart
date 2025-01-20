@@ -39,7 +39,7 @@ class UserSettingsView extends ConsumerWidget {
                     trailing: const Icon(Icons.arrow_right),
                     onTap: () {
                       log('Email change');
-                      // Navigator.of(context).pushNamed('/change-email');
+                      _showSnackBar(context, "Implemented in future");
                     },
                   ),
                   Divider(),
@@ -49,7 +49,7 @@ class UserSettingsView extends ConsumerWidget {
                     trailing: const Icon(Icons.arrow_right),
                     onTap: () {
                       log('Change password');
-                      //Navigator.of(context).pushNamed('/change-password');
+                      _showSnackBar(context, "Implemented in future");
                     },
                   ),
                   Divider(),
@@ -59,7 +59,7 @@ class UserSettingsView extends ConsumerWidget {
                     trailing: const Icon(Icons.arrow_right),
                     onTap: () {
                       log('Reset user settings');
-                      // Navigator.of(context).pushNamed('/change-password');
+                      _showSnackBar(context, "Implemented in future");
                     },
                   ),
                   Divider(),
@@ -90,4 +90,33 @@ class UserSettingsView extends ConsumerWidget {
       ),
     );
   }
+
+  void _showSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+      ),
+    );
+  }
+
+  void _showPopup(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Informacja'),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Zamknij'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
+

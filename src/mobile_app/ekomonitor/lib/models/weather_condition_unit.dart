@@ -1,4 +1,4 @@
-import 'package:ekomonitor/models/weather-condition-description.dart';
+import 'package:ekomonitor/models/weather_condition_description.dart';
 
 class WthrConUnit {
   final WthrConDesc wthrConDesc;

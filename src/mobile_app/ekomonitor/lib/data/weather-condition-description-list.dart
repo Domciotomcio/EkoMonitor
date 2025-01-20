@@ -1,79 +1,79 @@
-import 'package:ekomonitor/models/weather-condition-description.dart';
+import 'package:ekomonitor/models/weather_condition_description.dart';
 import 'package:flutter/material.dart';
 
 List<WthrConDesc> wthrConDescList = [
-  WthrConDesc(
-      name: "precipitation",
+  const WthrConDesc(
+      name: "Precipitation",
       fixedName: "precipitation",
       icon: Icon(Icons.umbrella_outlined),
       path: 'rainfall',
       description: 'Precipitation in millimeters'),
-  WthrConDesc(
-      name: "precipitation probability",
+  const WthrConDesc(
+      name: "Precipitation Probability",
       fixedName: "precipitation_probability",
       icon: Icon(Icons.umbrella_outlined),
       path: 'rainfall',
       description: 'Precipitation probability in percent'),
-  WthrConDesc(
-      name: "cloudiness",
+  const WthrConDesc(
+      name: "Cloudiness",
       fixedName: "cloudiness",
       icon: Icon(Icons.cloud_outlined),
       path: 'clouds',
       description: 'Cloudiness in percent'),
-  WthrConDesc(
-      name: "Temperatura",
+  const WthrConDesc(
+      name: "Temperature",
       fixedName: "temperature",
       icon: Icon(Icons.thermostat_outlined),
       path: 'temperature',
       description: 'Temperature in Celsius'),
-  WthrConDesc(
-      name: "Ciśnienie atmosferyczne",
+  const WthrConDesc(
+      name: "Atmospheric Pressure",
       fixedName: "pressure",
       icon: Icon(Icons.thermostat_outlined),
       path: 'pressure',
       description: 'Atmospheric pressure in hPa'),
-  WthrConDesc(
-      name: "Wilgotność",
+  const WthrConDesc(
+      name: "Humidity",
       fixedName: "humidity",
       icon: Icon(Icons.device_thermostat_outlined),
       path: 'humidity',
       description: 'Humidity in percent'),
-  WthrConDesc(
-      name: "Widoczność",
+  const WthrConDesc(
+      name: "Visibility",
       fixedName: "visibility",
       icon: Icon(Icons.view_agenda_outlined),
       path: 'visibility',
       description: 'Visibility in meters'),
-  WthrConDesc(
-      name: "Prędkość wiatru",
+  const WthrConDesc(
+      name: "Wind Speed",
       fixedName: "wind_speed",
       icon: Icon(Icons.wind_power_outlined),
       path: 'wind-speed',
-      description: 'Prędkość wiatru w m/s'),
-  WthrConDesc(
-      name: "Kierunek wiatru",
+      description: 'Wind speed in m/s'),
+  const WthrConDesc(
+      name: "Wind Direction",
       fixedName: "wind_direction",
       icon: Icon(Icons.wind_power_outlined),
       path: 'wind-direction',
-      description: 'Kierunek wiatru w stopniach'),
-  WthrConDesc(
-      name: "Stęzenie pyłków PM 10",
+      description: 'Wind direction in degrees'),
+  const WthrConDesc(
+      name: "PM 10 Concentration",
       fixedName: "pm10",
       icon: Icon(Icons.checklist_rounded),
       path: 'pm10',
-      description: 'Stęzenie pyłków PM 10 w µg/m³'),
-  WthrConDesc(
-      name: "Stęzenie pyłków PM 2.5",
+      description: 'PM 10 concentration in µg/m³'),
+  const WthrConDesc(
+      name: "PM 2.5 Concentration",
       fixedName: "pm2_5",
       icon: Icon(Icons.checklist_rounded),
       path: 'pm25',
-      description: 'Stęzenie pyłków PM 2.5 w µg/m³'),
-  WthrConDesc(
-      name: "Jakosc powietrza",
+      description: 'PM 2.5 concentration in µg/m³'),
+  const WthrConDesc(
+      name: "Air Quality Index (AQI)",
       fixedName: "aqi",
       icon: Icon(Icons.checklist_rounded),
       path: 'pm25',
-      description: 'Stęzenie pyłków PM 2.5 w µg/m³'),
+      description: 'Air Quality Index based on PM 2.5 concentration'),
 ];
 
 Map<String, WthrConDesc> wthrConDescMap = {
@@ -87,6 +87,6 @@ Map<String, WthrConDesc> wthrConDescMap = {
   'wind_speed': wthrConDescList[7],
   'wind_direction': wthrConDescList[8],
   'pm10': wthrConDescList[9],
-  'pm2_5': wthrConDescList[9],
-  'aqi': wthrConDescList[10],
+  'pm2_5': wthrConDescList[10],
+  'aqi': wthrConDescList[11],
 };

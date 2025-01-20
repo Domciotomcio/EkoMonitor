@@ -4,7 +4,7 @@ import 'package:ekomonitor/data/const.dart';
 import 'package:ekomonitor/data/historical/models/historical_model.dart';
 import 'package:ekomonitor/data/historical/services/historical_service.dart';
 import 'package:ekomonitor/data/measurement/models/measurement_model.dart';
-import 'package:ekomonitor/models/weather-condition-description.dart';
+import 'package:ekomonitor/models/weather_condition_description.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

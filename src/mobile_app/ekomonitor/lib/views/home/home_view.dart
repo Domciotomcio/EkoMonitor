@@ -3,7 +3,7 @@ import 'package:ekomonitor/data/main-tile-dic.dart';
 import 'package:ekomonitor/data/weather-condition-description-list.dart';
 import 'package:ekomonitor/functions/logout_function.dart';
 import 'package:ekomonitor/main.dart';
-import 'package:ekomonitor/models/weather-condition-unit.dart';
+import 'package:ekomonitor/models/weather_condition_unit.dart';
 import 'package:ekomonitor/providers/theme_provider.dart';
 import 'package:ekomonitor/providers/user_provider.dart';
 import 'package:ekomonitor/themes/theme1.dart';
@@ -15,7 +15,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HomePage extends ConsumerWidget {
   @override
-  Widget build(BuildContext context, WidgetRef ref) {    
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
@@ -75,16 +75,13 @@ class HomeViewMobile extends ConsumerWidget {
             WorthMentioning(),
             const Divider(),
             const Text("Ustawienia"),
-            Row(
-              children: settingsList
-                  .map((config) => Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 4.0), // Add horizontal padding
-                          child: SettingsTile(config: config),
-                        ),
-                      ))
-                  .toList(),
+            IntrinsicHeight(
+              child: Row(
+                children: settingsList
+                    .map((config) =>
+                        Expanded(child: SettingsTile(config: config)))
+                    .toList(),
+              ),
             ),
           ],
         ),
@@ -93,9 +90,9 @@ class HomeViewMobile extends ConsumerWidget {
   }
 }
 
-class WorthMentioning extends StatelessWidget {
+class WorthMentioning extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
         const Text("See the details of the weather conditions"),
@@ -103,7 +100,8 @@ class WorthMentioning extends StatelessWidget {
           ListTile(
             title: Text(wthrConDescList[i].name),
             subtitle: Text(wthrConDescList[i].description),
-            leading: Icon(wthrConDescList[i].icon.icon),
+            leading: Icon(wthrConDescList[i].icon.icon,
+                color: ref.watch(themeProvider).primaryColor),
             onTap: () {
               Navigator.pushNamed(context, wthrConDescList[i].path);
             },
@@ -194,16 +192,17 @@ class WeatherCarousel extends ConsumerWidget {
       //     .wthrConUnitList
       //     .map((wthrConUnit) => WeatherConditionTile(wthrConUnit: wthrConUnit))
       //     .toList(),
-      children: ref.watch(hourlyProvider)!.weatherConditions.entries.map((entry) =>
-         WeatherConditionTile(
-          wthrConUnit: WthrConUnit(
-            wthrConDesc: wthrConDescMap[entry.key]!,
-            value: entry.value.value.toString() + " " + entry.value.unit,
-          ),
-          
-        )
-      ).toList(),
-      
+      children: ref
+          .watch(hourlyProvider)!
+          .weatherConditions
+          .entries
+          .map((entry) => WeatherConditionTile(
+                wthrConUnit: WthrConUnit(
+                  wthrConDesc: wthrConDescMap[entry.key]!,
+                  value: entry.value.value.toString() + " " + entry.value.unit,
+                ),
+              ))
+          .toList(),
     );
   }
 }
@@ -234,7 +233,7 @@ class WeatherStatusNotifier extends StateNotifier<WeatherStatus> {
   void updateWeatherStatus(WeatherStatus weatherStatus) {
     state = weatherStatus;
     // Update the theme using ThemeNotifier
-    ref.read(themeNotifierProvider.notifier).setTheme(weatherStatus.theme);
+    ref.read(themeProvider.notifier).setTheme(weatherStatus.theme);
   }
 }
 

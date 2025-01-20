@@ -4,3 +4,5 @@ const bool USE_MOCK_SERVICE =
     true; // TODO: Change this to 'true' to use the mock service
 const double LATITUDE = 51.5074; // TODO: Change this to the actual latitude
 const double LONGITUDE = 17.1278; // TODO: Change this to the actual longitude
+
+const String USER_MANAGEMENT_URL = 'http://127.0.0.1:8004/';

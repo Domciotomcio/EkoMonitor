@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:ekomonitor/data/const.dart';
 import 'package:ekomonitor/data/user/services/user_service.dart';
 import 'package:ekomonitor/data/user_profile/enums/user_profile_enum.dart';
 import 'package:ekomonitor/data/user_profile/models/user_profile_model.dart';
@@ -22,12 +23,12 @@ class UserNotifier extends StateNotifier<UserModel?> {
   Future<bool> login(String email, String password) async {
     // await Future.delayed(Duration(seconds: 2));
 
-    //const email = "Test.userX@example.com"; // TODO: change to user input
-   //const password = "password123"; // TODO: change to user input
+    const email = "Test.userX@example.com"; // TODO: change to user input
+    const password = "password123"; // TODO: change to user input
 
     // login request to server with email and password, return for me id
     int? userId;
-    const url = 'http://127.0.0.1:8004/users/authenticate';
+    const url = '${USER_MANAGEMENT_URL}users/authenticate';
     final response = await http.post(
       Uri.parse(url),
       headers: {
@@ -62,7 +63,7 @@ class UserNotifier extends StateNotifier<UserModel?> {
           ref.read(mainTileProvider.notifier).setMainTile('default');
         }
 
-        ref.read(themeNotifierProvider.notifier).setTheme(ThemeData(
+        ref.read(themeProvider.notifier).setTheme(ThemeData(
           colorScheme: ColorScheme.fromSeed(
             seedColor: ref.read(mainTileProvider).color,
             brightness: Brightness.light,

@@ -1,6 +1,6 @@
 import 'package:ekomonitor/main.dart';
-import 'package:ekomonitor/models/weather-condition-description.dart';
-import 'package:ekomonitor/models/weather-condition-unit.dart';
+import 'package:ekomonitor/models/weather_condition_description.dart';
+import 'package:ekomonitor/models/weather_condition_unit.dart';
 import 'package:ekomonitor/providers/theme_provider.dart';
 import 'package:ekomonitor/views/home/home_view.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +33,7 @@ class WeatherConditionTile extends ConsumerWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
-                color: ref.watch(themeNotifierProvider).primaryColor, width: 1),
+                color: ref.watch(themeProvider).primaryColor, width: 1),
           ),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -41,8 +41,7 @@ class WeatherConditionTile extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Icon(wthrConUnit.wthrConDesc.icon.icon,
-                    size: 32,
-                    color: ref.watch(themeNotifierProvider).primaryColor),
+                    size: 32, color: ref.watch(themeProvider).primaryColor),
                 SizedBox(height: 8),
                 Expanded(
                     child: Text(wthrConUnit.value,
