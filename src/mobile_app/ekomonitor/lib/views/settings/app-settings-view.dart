@@ -7,12 +7,12 @@ class AppSettingsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Ustawienia aplikacji'),
+          title: const Text('App settings'),
         ),
         body: Center(
           child: FilledButton.icon(
               onPressed: () {},
-              label: Text("Zresetuj ustawienia aplikacji"),
+              label: Text("Restore default settings"),
               icon: Icon(Icons.restore)),
         ));
   }

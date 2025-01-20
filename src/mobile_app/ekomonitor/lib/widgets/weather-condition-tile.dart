@@ -25,37 +25,32 @@ class WeatherConditionTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return GestureDetector(
-      onTap: () {
-        // Navigator.pushNamed(context, wthrConUnit.wthrConDesc.path);
-      },
-      child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-                color: ref.watch(themeProvider).primaryColor, width: 1),
+    return Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+              color: ref.watch(themeProvider).primaryColor, width: 1),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(wthrConUnit.wthrConDesc.icon.icon,
+                  size: 32, color: ref.watch(themeProvider).primaryColor),
+              SizedBox(height: 8),
+              Expanded(
+                  child:
+                      Text(wthrConUnit.value, style: TextStyle(fontSize: 20))),
+              Expanded(
+                child: Text(
+                  wthrConUnit.wthrConDesc.name,
+                  softWrap: true,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              )
+            ],
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(wthrConUnit.wthrConDesc.icon.icon,
-                    size: 32, color: ref.watch(themeProvider).primaryColor),
-                SizedBox(height: 8),
-                Expanded(
-                    child: Text(wthrConUnit.value,
-                        style: TextStyle(fontSize: 20))),
-                Expanded(
-                  child: Text(
-                    wthrConUnit.wthrConDesc.name,
-                    softWrap: true,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                )
-              ],
-            ),
-          )),
-    );
+        ));
   }
 }

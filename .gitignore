@@ -7,3 +7,7 @@ src/data_aggregation/.env
 src/data_processing/.env
 src/data_aggregation/__pycache__/
 src/data_processing/__pycache__/
+forecast_model_ts.keras
+mean_ts.npy
+std_ts.npy
+src/ai_forecasting/__pycache__/

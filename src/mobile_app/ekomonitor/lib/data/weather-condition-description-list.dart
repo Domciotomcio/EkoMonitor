@@ -11,13 +11,13 @@ List<WthrConDesc> wthrConDescList = [
   const WthrConDesc(
       name: "Precipitation Probability",
       fixedName: "precipitation_probability",
-      icon: Icon(Icons.umbrella_outlined),
-      path: 'rainfall',
+      icon: Icon(Icons.percent_outlined),
+      path: 'rainfall_probability',
       description: 'Precipitation probability in percent'),
   const WthrConDesc(
       name: "Cloudiness",
       fixedName: "cloudiness",
-      icon: Icon(Icons.cloud_outlined),
+      icon: Icon(Icons.cloud),
       path: 'clouds',
       description: 'Cloudiness in percent'),
   const WthrConDesc(
@@ -29,43 +29,43 @@ List<WthrConDesc> wthrConDescList = [
   const WthrConDesc(
       name: "Atmospheric Pressure",
       fixedName: "pressure",
-      icon: Icon(Icons.thermostat_outlined),
+      icon: Icon(Icons.speed),
       path: 'pressure',
       description: 'Atmospheric pressure in hPa'),
   const WthrConDesc(
       name: "Humidity",
       fixedName: "humidity",
-      icon: Icon(Icons.device_thermostat_outlined),
+      icon: Icon(Icons.water_drop),
       path: 'humidity',
       description: 'Humidity in percent'),
   const WthrConDesc(
       name: "Visibility",
       fixedName: "visibility",
-      icon: Icon(Icons.view_agenda_outlined),
+      icon: Icon(Icons.visibility),
       path: 'visibility',
       description: 'Visibility in meters'),
   const WthrConDesc(
       name: "Wind Speed",
       fixedName: "wind_speed",
-      icon: Icon(Icons.wind_power_outlined),
+      icon: Icon(Icons.air),
       path: 'wind-speed',
       description: 'Wind speed in m/s'),
   const WthrConDesc(
       name: "Wind Direction",
       fixedName: "wind_direction",
-      icon: Icon(Icons.wind_power_outlined),
+      icon: Icon(Icons.explore),
       path: 'wind-direction',
       description: 'Wind direction in degrees'),
   const WthrConDesc(
       name: "PM 10 Concentration",
       fixedName: "pm10",
-      icon: Icon(Icons.checklist_rounded),
+      icon: Icon(Icons.filter_drama),
       path: 'pm10',
       description: 'PM 10 concentration in µg/m³'),
   const WthrConDesc(
       name: "PM 2.5 Concentration",
       fixedName: "pm2_5",
-      icon: Icon(Icons.checklist_rounded),
+      icon: Icon(Icons.filter_drama),
       path: 'pm25',
       description: 'PM 2.5 concentration in µg/m³'),
   const WthrConDesc(

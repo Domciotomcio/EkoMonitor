@@ -56,7 +56,7 @@ class _WeatherForecastViewState extends ConsumerState<WeatherForecastView> {
                             "Forcast for ${DateFormat('yyyy-MM-dd').format(time)}")),
                     Divider(),
                     ListTile(
-                      leading: Icon(Icons.cloud_outlined,
+                      leading: Icon(Icons.umbrella_outlined,
                           color: ref.watch(themeProvider).primaryColor),
                       title: Text('Precipitation'),
                       subtitle: Text(
@@ -64,7 +64,7 @@ class _WeatherForecastViewState extends ConsumerState<WeatherForecastView> {
                     ),
                     Divider(),
                     ListTile(
-                      leading: Icon(Icons.cloud_queue,
+                      leading: Icon(Icons.percent_outlined,
                           color: ref.watch(themeProvider).primaryColor),
                       title: Text('Precipitation Probability'),
                       subtitle: Text(
@@ -144,7 +144,7 @@ class _WeatherForecastViewState extends ConsumerState<WeatherForecastView> {
                     ),
                     Divider(),
                     ListTile(
-                      leading: Icon(Icons.air_outlined,
+                      leading: Icon(Icons.checklist,
                           color: ref.watch(themeProvider).primaryColor),
                       title: Text('AQI'),
                       subtitle: Text('${forecast.aqi.toStringAsFixed(2)}'),

@@ -17,7 +17,7 @@ class UserSettingsView extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Ustawienia użytkownika'),
+        title: const Text('User settings'),
       ),
       body: Container(
         width: double.infinity,
@@ -34,7 +34,7 @@ class UserSettingsView extends ConsumerWidget {
                       style: const TextStyle(fontSize: 16)),
                   SizedBox(height: 16),
                   ListTile(
-                    title: const Text('Zmień email'),
+                    title: const Text('Change email'),
                     leading: const Icon(Icons.email),
                     trailing: const Icon(Icons.arrow_right),
                     onTap: () {
@@ -44,7 +44,7 @@ class UserSettingsView extends ConsumerWidget {
                   ),
                   Divider(),
                   ListTile(
-                    title: const Text('Zmień hasło'),
+                    title: const Text('Change password'),
                     leading: const Icon(Icons.lock),
                     trailing: const Icon(Icons.arrow_right),
                     onTap: () {
@@ -54,7 +54,7 @@ class UserSettingsView extends ConsumerWidget {
                   ),
                   Divider(),
                   ListTile(
-                    title: const Text('Zresetuj ustawienia użytkownika'),
+                    title: const Text('Reset user settings'),
                     leading: const Icon(Icons.restore),
                     trailing: const Icon(Icons.arrow_right),
                     onTap: () {
@@ -64,7 +64,7 @@ class UserSettingsView extends ConsumerWidget {
                   ),
                   Divider(),
                   ListTile(
-                    title: const Text('Wykonaj ponownie ankietę'),
+                    title: const Text('Questioner for user settings'),
                     leading: const Icon(Icons.restore),
                     trailing: const Icon(Icons.arrow_right),
                     onTap: () {
@@ -75,7 +75,7 @@ class UserSettingsView extends ConsumerWidget {
                   SizedBox(height: 16),
                   FilledButton.icon(
                       onPressed: () => logoutFunction(context, ref),
-                      label: Text("Wyloguj"),
+                      label: Text("Logout"),
                       icon: Icon(Icons.logout)),
                 ],
               )
@@ -119,4 +119,3 @@ class UserSettingsView extends ConsumerWidget {
     );
   }
 }
-

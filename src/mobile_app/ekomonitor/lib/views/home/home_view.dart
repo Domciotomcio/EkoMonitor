@@ -111,6 +111,7 @@ class WorthMentioning extends ConsumerWidget {
             leading: Icon(wthrConDescList[i].icon.icon,
                 color: ref.watch(themeProvider).primaryColor),
             onTap: () {
+              print("Tapped on ${wthrConDescList[i].name}");
               Navigator.pushNamed(context, wthrConDescList[i].path);
             },
           ),
@@ -203,6 +204,8 @@ class WeatherCarousel extends ConsumerWidget {
       ),
       scrollDirection: Axis.horizontal,
       itemExtent: 200,
+      onTap: (value) =>
+          Navigator.pushNamed(context, wthrConDescList[value].path),
       children: ref
           .watch(hourlyProvider)!
           .weatherConditions

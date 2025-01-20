@@ -6,7 +6,9 @@ import 'package:ekomonitor/data/user_profile/providers/user_profile_provider.dar
 import 'package:ekomonitor/notifiers/main_tile_notifier.dart';
 import 'package:ekomonitor/providers/theme_provider.dart';
 import 'package:ekomonitor/providers/user_provider.dart';
+import 'package:ekomonitor/routes/fade_route.dart';
 import 'package:ekomonitor/themes/theme1.dart';
+import 'package:ekomonitor/views/home/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -85,8 +87,10 @@ class _LoginViewState extends ConsumerState<LoginView> {
                               useMaterial3: true,
                             ));
 
-                        Navigator.pushNamedAndRemoveUntil(
-                            context, '/home', (route) => false);
+                        // Navigator.pushNamedAndRemoveUntil(
+                        //     context, '/home', (route) => false);
+                        Navigator.pushAndRemoveUntil(context,
+                            FadeRoute(page: HomePage()), (route) => false);
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
