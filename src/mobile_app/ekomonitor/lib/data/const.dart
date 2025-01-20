@@ -6,3 +6,5 @@ const double LATITUDE = 51.5074; // TODO: Change this to the actual latitude
 const double LONGITUDE = 17.1278; // TODO: Change this to the actual longitude
 
 const String USER_MANAGEMENT_URL = 'http://127.0.0.1:8004/';
+
+const String FORECAST_CODE = 'ts';
