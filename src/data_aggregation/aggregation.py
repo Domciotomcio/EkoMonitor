@@ -2,6 +2,9 @@ import requests
 import os
 import openmeteo_requests
 import datetime as dt
+from dotenv import load_dotenv
+
+load_dotenv()
 
 google_maps_key = os.getenv("GOOGLE_MAPS_API_KEY")
 

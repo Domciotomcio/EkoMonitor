@@ -4,6 +4,9 @@ import requests
 import os
 import pymongo
 from copy import deepcopy
+from dotenv import load_dotenv
+
+load_dotenv()
 
 db_password = os.getenv("DB_PASSWORD")
 uri = f"mongodb+srv://EkoMonitorAdmit:{db_password}@ekomonitor.kcnzk.mongodb.net/?retryWrites=true&w=majority&appName=EkoMonitor"
