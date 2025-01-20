@@ -7,7 +7,7 @@ class SettingsTileConfig {
   final String path;
 
   const SettingsTileConfig(
-      {this.text = "Ustawienia",
+      {this.text = "Settings",
       this.color = Colors.grey,
       this.icon = const Icon(Icons.settings),
       this.path = "/"});

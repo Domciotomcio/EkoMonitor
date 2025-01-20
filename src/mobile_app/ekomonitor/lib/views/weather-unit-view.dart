@@ -8,9 +8,8 @@ import 'package:ekomonitor/models/weather_condition_description.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class WeatherUnitView extends StatelessWidget {
+class WeatherUnitView extends StatefulWidget {
   final WthrConDesc weatherCondition;
-  final HistoricalService historicalService = HistoricalService();
 
   WeatherUnitView({
     super.key,
@@ -18,10 +17,39 @@ class WeatherUnitView extends StatelessWidget {
   });
 
   @override
+  State<WeatherUnitView> createState() => _WeatherUnitViewState();
+}
+
+class _WeatherUnitViewState extends State<WeatherUnitView> {
+  final HistoricalService historicalService = HistoricalService();
+
+  DateTime startDate = DateTime.now();
+
+  DateTime endDate = DateTime.now();
+
+  Future<void> _selectDate(BuildContext context, bool isStartDate) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null) {
+      setState(() {
+        if (isStartDate) {
+          startDate = picked;
+        } else {
+          endDate = picked;
+        }
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(weatherCondition.name),
+        title: Text(widget.weatherCondition.name),
       ),
       body: SizedBox(
         width: double.infinity,
@@ -30,25 +58,48 @@ class WeatherUnitView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Icon(weatherCondition.icon.icon, size: 100),
-              Text(weatherCondition.name),
-              SizedBox(height: 16),
+              Icon(widget.weatherCondition.icon.icon, size: 100),
+              Text(widget.weatherCondition.name),
+              const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                        child: FilledButton(
+                            onPressed: () => _selectDate(context, true),
+                            child: Text(
+                                "From ${DateFormat('yyyy-MM-dd').format(startDate)}"))),
+                    const SizedBox(width: 16),
+                    Expanded(
+                        child: FilledButton(
+                            onPressed: () => _selectDate(context, false),
+                            child: Text(
+                                "To ${DateFormat('yyyy-MM-dd').format(endDate)}"))),
+                  ],
+                ),
+              ),
               FutureBuilder(
                   future: historicalService.getHistoricalData(
-                      LATITUDE, LONGITUDE, 1736768282, 1736768282),
+                    LATITUDE,
+                    LONGITUDE,
+                    startDate,
+                    endDate,
+                  ),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
+                      return const CircularProgressIndicator();
                     } else if (snapshot.hasData) {
                       HistoricalModel historicalModel =
                           snapshot.data as HistoricalModel;
                       return ListView(
                         shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
+                        physics: const NeverScrollableScrollPhysics(),
                         children:
                             historicalModel.weatherData.entries.map((entry) {
-                          final int date = int.parse(entry.key);
-                          final measurement = entry.value[weatherCondition
+                          final int date = int.parse(entry.key) + 86400;
+                          final measurement = entry.value[widget
+                              .weatherCondition
                               .fixedName]!; // Assuming 'weatherCondition.name' is the correct field
                           final formattedDate = DateFormat('yyyy-MM-dd HH:mm')
                               .format(DateTime.fromMillisecondsSinceEpoch(
@@ -62,7 +113,7 @@ class WeatherUnitView extends StatelessWidget {
                         }).toList(),
                       );
                     } else {
-                      return Text('No data available');
+                      return const Text('No data available');
                     }
                   }),
             ],

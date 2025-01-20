@@ -74,7 +74,14 @@ class HomeViewMobile extends ConsumerWidget {
             const Divider(),
             WorthMentioning(),
             const Divider(),
-            const Text("Ustawienia"),
+            ListTile(
+              onTap: () => Navigator.pushNamed(context, '/weather-forecast'),
+              leading: Icon(Icons.wb_sunny_outlined,
+                  color: ref.watch(themeProvider).primaryColor),
+              title: Text("Weather forecast"),
+            ),
+            const Divider(),
+            const Text("Settings"),
             IntrinsicHeight(
               child: Row(
                 children: settingsList
@@ -94,6 +101,7 @@ class WorthMentioning extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text("See the details of the weather conditions"),
         for (int i = 0; i < 3; i++)
@@ -155,7 +163,7 @@ class HomeViewDesktop extends ConsumerWidget {
             const Divider(),
             WorthMentioning(),
             const Divider(),
-            const Text("Ustawienia"),
+            const Text("Settings"),
             Row(
               children: settingsList
                   .map((config) => Expanded(
@@ -181,17 +189,20 @@ class WeatherCarousel extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final hourlyWeather = ref.watch(hourlyProvider);
+
+    if (hourlyWeather == null) {
+      return Container(
+          width: double.infinity,
+          child: Center(child: const CircularProgressIndicator()));
+    }
+
     return CarouselView(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
       ),
       scrollDirection: Axis.horizontal,
       itemExtent: 200,
-      // children: ref
-      //    .watch(weatherStatusNotifierProvider)
-      //     .wthrConUnitList
-      //     .map((wthrConUnit) => WeatherConditionTile(wthrConUnit: wthrConUnit))
-      //     .toList(),
       children: ref
           .watch(hourlyProvider)!
           .weatherConditions

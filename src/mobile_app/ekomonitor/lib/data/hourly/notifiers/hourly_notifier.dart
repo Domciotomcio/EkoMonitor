@@ -4,13 +4,17 @@ import 'package:ekomonitor/data/hourly/models/hourly_model.dart';
 import 'package:ekomonitor/data/hourly/services/hourly_service.dart';
 import 'package:ekomonitor/data/weather-condition-description-list.dart';
 import 'package:ekomonitor/models/weather_condition_unit.dart';
+import 'package:ekomonitor/providers/user_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HourlyNotifier extends StateNotifier<HourlyModel?> {
   final HourlyService _service;
   final Ref ref;
 
-  HourlyNotifier(this._service, this.ref) : super(null);
+  HourlyNotifier(this._service, this.ref) : super(null)
+  {
+    fetchHourly(51, 17);
+  }
 
   Future<void> fetchHourly(double latitude, double longitude) async {
     state = await _service.getHourlyData(latitude, longitude);
