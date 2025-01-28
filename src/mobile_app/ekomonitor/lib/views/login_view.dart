@@ -36,8 +36,15 @@ class _LoginViewState extends ConsumerState<LoginView> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text("Ekomonitor App",
-                style: Theme.of(context).textTheme.displaySmall),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(16.0),
+              child: Container(
+                constraints: BoxConstraints(
+                  maxWidth: 200.0, // Set the maximum width for the image
+                ),
+                child: Image.asset('assets/images/logo.png'),
+              ),
+            ),
             const SizedBox(height: 16.0),
             TextField(
               controller: _emailController,
@@ -99,7 +106,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                         );
                       }
                     },
-                    child: const Text('Login'),
+                    child: const Text('Login to Ekomonitor'),
                   ),
           ],
         ),

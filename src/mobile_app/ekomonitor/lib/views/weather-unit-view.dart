@@ -104,11 +104,12 @@ class _WeatherUnitViewState extends State<WeatherUnitView> {
                           final formattedDate = DateFormat('yyyy-MM-dd HH:mm')
                               .format(DateTime.fromMillisecondsSinceEpoch(
                                   1000 * date));
+
                           return ListTile(
-                            title: Text(measurement.value.toString() +
-                                " " +
-                                measurement.unit),
-                            trailing: Text(formattedDate),
+                            leading: Icon(widget.weatherCondition.icon.icon),
+                            title: Text(
+                                "${measurement.value.toStringAsFixed(1)} ${measurement.unit}"),
+                            subtitle: Text(formattedDate),
                           );
                         }).toList(),
                       );

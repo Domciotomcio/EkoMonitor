@@ -84,7 +84,7 @@ class UserSettingsView extends ConsumerWidget {
                   onPressed: () {
                     Navigator.of(context).pushReplacementNamed('/login');
                   },
-                  child: const Text('Zaloguj'),
+                  child: const Text('Log in'),
                 ),
               ),
       ),

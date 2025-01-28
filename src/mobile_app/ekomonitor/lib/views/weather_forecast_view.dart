@@ -60,7 +60,7 @@ class _WeatherForecastViewState extends ConsumerState<WeatherForecastView> {
                           color: ref.watch(themeProvider).primaryColor),
                       title: Text('Precipitation'),
                       subtitle: Text(
-                          '${forecast.precipitation.toStringAsFixed(2)} mm'),
+                          '${forecast.precipitation.abs().toStringAsFixed(2)} mm'),
                     ),
                     Divider(),
                     ListTile(
@@ -68,7 +68,7 @@ class _WeatherForecastViewState extends ConsumerState<WeatherForecastView> {
                           color: ref.watch(themeProvider).primaryColor),
                       title: Text('Precipitation Probability'),
                       subtitle: Text(
-                          '${forecast.precipitationProbability.toStringAsFixed(2)} %'),
+                          '${forecast.precipitationProbability.clamp(0, 100).toStringAsFixed(2)} %'),
                     ),
                     Divider(),
                     ListTile(
@@ -100,7 +100,7 @@ class _WeatherForecastViewState extends ConsumerState<WeatherForecastView> {
                           color: ref.watch(themeProvider).primaryColor),
                       title: Text('Humidity'),
                       subtitle:
-                          Text('${forecast.humidity.toStringAsFixed(2)} %'),
+                          Text('${forecast.humidity.clamp(0, 100).toStringAsFixed(2)} %'),
                     ),
                     Divider(),
                     ListTile(

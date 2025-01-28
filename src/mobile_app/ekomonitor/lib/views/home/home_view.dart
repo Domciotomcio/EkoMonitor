@@ -21,7 +21,7 @@ class HomePage extends ConsumerWidget {
       appBar: AppBar(
         title: ref.watch(userProvider) != null
             ? Text('Welcome ${ref.watch(userProvider)!.firstName}')
-            : const Text('Welcome in Ekomonitor'),
+            : const Text('Welcome to Ekomonitor'),
         actions: [
           // user logged
           if (ref.watch(userProvider) != null)
@@ -48,7 +48,8 @@ class HomePage extends ConsumerWidget {
           if (constraints.maxWidth < 600) {
             return const HomeViewMobile();
           } else {
-            return const HomeViewDesktop();
+            return const HomeViewMobile();
+            //return const HomeViewDesktop();
           }
         },
       ),
@@ -132,50 +133,51 @@ class HomeViewDesktop extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             MainTile(),
-            const Divider(),
-            Container(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                      width: 200,
-                      child: Column(
-                        children: ref
-                            .watch(weatherStatusNotifierProvider)
-                            .wthrConUnitList
-                            .map((wthrConUnit) => Padding(
-                                  padding: const EdgeInsets.only(
-                                      bottom:
-                                          8.0), // Add space between the widgets
-                                  child: WeatherConditionTile(
-                                      wthrConUnit: wthrConUnit),
-                                ))
-                            .toList(),
-                      )),
-                  SizedBox(width: 8), // Add space between the two columns
-                  Expanded(
-                      child: Container(
-                          height: 400,
-                          color: Theme.of(context).colorScheme.surfaceContainer,
-                          child: Center(child: Text("Presentation")))),
-                ],
-              ),
-            ),
-            const Divider(),
-            WorthMentioning(),
-            const Divider(),
-            const Text("Settings"),
-            Row(
-              children: settingsList
-                  .map((config) => Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 4.0), // Add horizontal padding
-                          child: SettingsTile(config: config),
-                        ),
-                      ))
-                  .toList(),
-            ),
+            // const Divider(),
+            // Container(
+            //   child: Row(
+            //     crossAxisAlignment: CrossAxisAlignment.start,
+            //     children: [
+            //       // Container(
+            //       //     width: 200,
+            //       //     child: Column(
+            //       //       children: ref
+            //       //           .watch(weatherStatusNotifierProvider)
+            //       //           .wthrConUnitList
+            //       //           .map((wthrConUnit) => Padding(
+            //       //                 padding: const EdgeInsets.only(
+            //       //                     bottom:
+            //       //                         8.0), // Add space between the widgets
+            //       //                 child: WeatherConditionTile(
+            //       //                     wthrConUnit: wthrConUnit),
+            //       //               ))
+            //       //           .toList(),
+            //       //     ),
+            //       //     ),
+            //       SizedBox(width: 8), // Add space between the two columns
+            //       Expanded(
+            //           child: Container(
+            //               height: 400,
+            //               color: Theme.of(context).colorScheme.surfaceContainer,
+            //               child: Center(child: Text("Presentation")))),
+            //     ],
+            //   ),
+            // ),
+            // const Divider(),
+            // WorthMentioning(),
+            // const Divider(),
+            // const Text("Settings"),
+            // Row(
+            //   children: settingsList
+            //       .map((config) => Expanded(
+            //             child: Padding(
+            //               padding: const EdgeInsets.symmetric(
+            //                   horizontal: 4.0), // Add horizontal padding
+            //               child: SettingsTile(config: config),
+            //             ),
+            //           ))
+            //       .toList(),
+            // ),
           ],
         ),
       ),
@@ -213,7 +215,7 @@ class WeatherCarousel extends ConsumerWidget {
           .map((entry) => WeatherConditionTile(
                 wthrConUnit: WthrConUnit(
                   wthrConDesc: wthrConDescMap[entry.key]!,
-                  value: entry.value.value.toString() + " " + entry.value.unit,
+                  value: entry.value.value.toString(),
                 ),
               ))
           .toList(),

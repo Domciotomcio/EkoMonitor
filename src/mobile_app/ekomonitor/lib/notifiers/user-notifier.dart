@@ -23,12 +23,12 @@ class UserNotifier extends StateNotifier<UserModel?> {
   Future<bool> login(String email, String password) async {
     // await Future.delayed(Duration(seconds: 2));
 
-    const email = "Test.userX@example.com"; // TODO: change to user input
-    const password = "password123"; // TODO: change to user input
+    email = "Test.userX@example.com"; // TODO: change to user input
+    password = "password123"; // TODO: change to user input
 
     // login request to server with email and password, return for me id
     int? userId;
-    const url = '${USER_MANAGEMENT_URL}users/authenticate';
+    final url = '${USER_MANAGEMENT_URL}users/authenticate';
     final response = await http.post(
       Uri.parse(url),
       headers: {
@@ -50,7 +50,7 @@ class UserNotifier extends StateNotifier<UserModel?> {
       try {
         state = await _userService.getUserData(userId);
         // Update UserProfileNotifier
-         await ref.read(userProfileProvider.notifier).fetchUserProfile(userId);
+        await ref.read(userProfileProvider.notifier).fetchUserProfile(userId);
 
         // set main tile for user profile
         UserProfileModel? userProfile = ref.read(userProfileProvider);
@@ -64,14 +64,12 @@ class UserNotifier extends StateNotifier<UserModel?> {
         }
 
         ref.read(themeProvider.notifier).setTheme(ThemeData(
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: ref.read(mainTileProvider).color,
-            brightness: Brightness.light,
-          ),
-          useMaterial3: true,
-        ));
-
-          
+              colorScheme: ColorScheme.fromSeed(
+                seedColor: ref.read(mainTileProvider).color,
+                brightness: Brightness.light,
+              ),
+              useMaterial3: true,
+            ));
       } catch (e) {
         log('Failed to login: $e');
         return false;
@@ -88,6 +86,5 @@ class UserNotifier extends StateNotifier<UserModel?> {
 
     // Clear UserProfileNotifier state
     ref.read(userProfileProvider.notifier).setUserProfile(null);
-  
   }
 }

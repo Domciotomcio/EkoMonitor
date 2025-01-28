@@ -59,7 +59,7 @@ const Map<String, MainTileConfig> mainTileDict = {
     code: 'strong-wind',
   ),
   'generalUser': MainTileConfig(
-    color: Color.fromARGB(255, 39, 176, 60),
+    color: Color.fromARGB(255, 20, 92, 31),
     title: 'Welcome to Ekomonitor app',
     subtitle: 'General User',
     icon: Icons.cloud_outlined,

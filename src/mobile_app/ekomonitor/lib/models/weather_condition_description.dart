@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class WthrConDesc {
   final String name;
   final String fixedName;
+  final String unit;
   final Icon icon;
   final String path;
   final String description;
@@ -10,6 +11,7 @@ class WthrConDesc {
   const WthrConDesc({
     required this.name,
     required this.fixedName,
+    required this.unit,
     required this.description,
     required this.icon,
     required this.path,
@@ -22,6 +24,7 @@ class WthrConDesc {
     return WthrConDesc(
       name: json['name'],
       fixedName: json['fixedName'],
+      unit: json['unit'],
       description: json['description'],
       icon: Icon(Icons.cloud_outlined),
       path: json['path'],

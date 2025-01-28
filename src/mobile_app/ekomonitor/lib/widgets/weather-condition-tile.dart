@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:ekomonitor/main.dart';
 import 'package:ekomonitor/models/weather_condition_description.dart';
 import 'package:ekomonitor/models/weather_condition_unit.dart';
@@ -15,6 +17,7 @@ class WeatherConditionTile extends ConsumerWidget {
         wthrConDesc: const WthrConDesc(
           name: 'name',
           fixedName: 'fixedName',
+          unit: 'unit',
           description: 'description',
           icon: Icon(Icons.ac_unit),
           path: 'path',
@@ -25,6 +28,7 @@ class WeatherConditionTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    log(wthrConUnit.value);
     return Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
@@ -40,8 +44,9 @@ class WeatherConditionTile extends ConsumerWidget {
                   size: 32, color: ref.watch(themeProvider).primaryColor),
               SizedBox(height: 8),
               Expanded(
-                  child:
-                      Text(wthrConUnit.value, style: TextStyle(fontSize: 20))),
+                  child: Text(
+                      "${wthrConUnit.value} ${wthrConUnit.wthrConDesc.unit}",
+                      style: TextStyle(fontSize: 20))),
               Expanded(
                 child: Text(
                   wthrConUnit.wthrConDesc.name,
