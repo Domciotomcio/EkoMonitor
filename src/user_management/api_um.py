@@ -40,6 +40,14 @@ def api_authenticate_user(user: UserAuth):
         raise HTTPException(status_code=401, detail="Authentication failed")
     return user
 
+# Endpoint for getting user data
+@app.get("/users/{user_id}")
+def api_get_user(user_id: int):
+    user = get_user(user_id)
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
+
 # Endpoint for updating user data
 @app.put("/users/{user_id}", response_model=int)
 def api_update_user(user_id: int, user: UserUpdate):
