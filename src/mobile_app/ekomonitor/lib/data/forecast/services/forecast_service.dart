@@ -11,7 +11,7 @@ class ForecastService {
       final timeUnix = time.toUtc().millisecondsSinceEpoch ~/ 1000;
 
       final response = await http.get(Uri.parse(
-          'http://127.0.0.1:8002/forecast?code=${FORECAST_CODE}&timestamp=${timeUnix}&lat=${latitude}&lon=${longitude}'));
+          '${AI_FORECASTING_URL}forecast?code=${FORECAST_CODE}&timestamp=${timeUnix}&lat=${latitude}&lon=${longitude}'));
 
       if (response.statusCode == 200) {
         // Decode JSON
