@@ -11,3 +11,4 @@ forecast_model_ts.keras
 mean_ts.npy
 std_ts.npy
 src/ai_forecasting/__pycache__/
+secrets/

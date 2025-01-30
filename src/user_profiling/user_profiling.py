@@ -5,16 +5,34 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import LabelEncoder
 import os
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
-load_dotenv()
+# load_dotenv()
 
-# Database connection parameters
-DB_NAME     = os.getenv("DB_NAME")
-DB_USER    = os.getenv("DB_USER")
-DB_PASSWORD = os.getenv("DB_PASSWORD")
-DB_HOST     = os.getenv("DB_HOST")
-DB_PORT    = os.getenv("DB_PORT")
+# # Database connection parameters
+# DB_NAME     = os.getenv("DB_NAME")
+# DB_USER    = os.getenv("DB_USER")
+# DB_PASSWORD = os.getenv("DB_PASSWORD")
+# DB_HOST     = os.getenv("DB_HOST")
+# DB_PORT    = os.getenv("DB_PORT")
+
+try:
+    with open("/run/secrets/DB_NAME", "r") as f:
+        DB_NAME = f.read().strip()
+    with open("/run/secrets/DB_USER", "r") as f:
+        DB_USER = f.read().strip()
+    with open("/run/secrets/DB_PASSWORD", "r") as f:
+        DB_PASSWORD = f.read().strip()
+    with open("/run/secrets/DB_HOST", "r") as f:
+        DB_HOST = f.read().strip()
+    with open("/run/secrets/DB_PORT", "r") as f:
+        DB_PORT = f.read().strip()
+except FileNotFoundError:
+    DB_NAME = None
+    DB_USER = None
+    DB_PASSWORD = None
+    DB_HOST = None
+    DB_PORT = None
 
 def connect():
     """ Connect to the PostgreSQL database server """

@@ -4,11 +4,16 @@ import requests
 import os
 import pymongo
 from copy import deepcopy
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
-load_dotenv()
+# load_dotenv()
 
-db_password = os.getenv("DB_PASSWORD")
+# db_password = os.getenv("DB_PASSWORD")
+try:
+    with open("/run/secrets/MONGO_PASSWORD", "r") as file:
+        db_password = file.read().strip()
+except FileNotFoundError:
+    db_password = None
 uri = f"mongodb+srv://EkoMonitorAdmit:{db_password}@ekomonitor.kcnzk.mongodb.net/?retryWrites=true&w=majority&appName=EkoMonitor"
 delta = 0.1
 
@@ -306,7 +311,7 @@ def process_hourly_request(lat, lon):
         existing_result.pop("_id")
         return existing_result
 
-    url=f"http://127.0.0.1:8000/current/all?lat={lat}&lon={lon}"
+    url=f"http://data_aggregation:8000/current/all?lat={lat}&lon={lon}"
     response = requests.get(url)
     resp = response.json()
     result = process_hourly(resp["weather"], resp["air_quality"], resp["pollen"])
@@ -440,7 +445,7 @@ def process_historical_request(lat, lon, start, end):
             result["weather_data"][f["timestamp"]] = f["weather_conditions"]
         return result
 
-    url=f"http://127.0.0.1:8000/historical/all?lat={lat}&lon={lon}&start={start}&end={end}"
+    url=f"http://data_aggregation:8000/historical/all?lat={lat}&lon={lon}&start={start}&end={end}"
     response = requests.get(url)
     resp = response.json()
     result = process_historical_data(resp["weather"], resp["air_quality"])

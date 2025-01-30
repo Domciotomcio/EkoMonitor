@@ -1,0 +1,82 @@
+
+
+services:
+  data_aggregation:
+    build: .
+    command: python data_aggregation/api.py
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    secrets:
+      - GOOGLE_POLLEN_API_KEY
+  
+  data_processing:
+    build: .
+    command: python data_processing/api.py
+    ports:
+      - "8001:8001"
+    env_file:
+      - .env
+    secrets:
+      - MONGO_PASSWORD
+  
+  ai_forecasting:
+    build: .
+    command: python ai_forecasting/api.py
+    ports:
+      - "8002:8002"
+    env_file:
+      - .env
+  
+  user_management:
+    build: .
+    command: python user_management/api_um.py
+    ports:
+      - "8004:8004"
+    env_file:
+      - .env
+    secrets:
+      - DB_HOST
+      - DB_PORT
+      - DB_NAME
+      - DB_USER
+      - DB_PASSWORD
+
+  user_profiling:
+    build: .
+    command: python user_profiling/api_up.py
+    ports:
+      - "8005:8005"
+    env_file:
+      - .env
+    secrets:
+      - DB_HOST
+      - DB_PORT
+      - DB_NAME
+      - DB_USER
+      - DB_PASSWORD
+  
+  api_gateway:
+    build: .
+    command: python api_gateway/api_gateway.py
+    ports:
+      - "8003:8003"
+    env_file:
+      - .env
+
+secrets:
+  GOOGLE_POLLEN_API_KEY:
+    file: secrets/GOOGLE_POLLEN_API_KEY
+  MONGO_PASSWORD:
+    file: secrets/MONGO_PASSWORD
+  DB_HOST:
+    file: secrets/DB_HOST
+  DB_PORT:
+    file: secrets/DB_PORT
+  DB_NAME:
+    file: secrets/DB_NAME
+  DB_USER:
+    file: secrets/DB_USER
+  DB_PASSWORD:  
+    file: secrets/DB_PASSWORD

@@ -1,12 +1,18 @@
 import requests
-import os
+# import os
 import openmeteo_requests
 import datetime as dt
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
-load_dotenv()
+# load_dotenv()
 
-google_maps_key = os.getenv("GOOGLE_MAPS_API_KEY")
+# google_maps_key = os.getenv("GOOGLE_MAPS_API_KEY")
+
+try:
+    with open("/run/secrets/GOOGLE_POLLEN_API_KEY", "r") as file:
+        google_maps_key = file.read().strip()
+except FileNotFoundError:
+    google_maps_key = None
 
 def get_weather_forecast(lat, lon, days=None):
     """

@@ -59,14 +59,14 @@ def train_model(model, X_train, X_valid, y_train, y_valid, epochs=10, batch_size
 
 
 def get_data(time_from, time_to, lat, lon):
-    url = f"http://127.0.0.1:8001/historical/point?lat={lat}&lon={lon}&start={time_from}&end={time_to}"
+    url = f"http://data_processing:8001/historical/point?lat={lat}&lon={lon}&start={time_from}&end={time_to}"
     response = requests.get(url)
     data = response.json()
     return data
 
 
 def get_data_all():
-    url = "http://127.0.0.1:8001/historical/all/nopollen"
+    url = "http://data_processing:8001/historical/all/nopollen"
     response = requests.get(url)
     data = response.json()
     return data
