@@ -7,7 +7,8 @@ import 'package:http/http.dart' as http;
 
 class UserService {
   Future<UserModel> getUserData(int userId) async {
-    final response = await http.get(Uri.parse('http://localhost:8004/users/$userId'));
+    final response =
+        await http.get(Uri.parse('${USER_MANAGEMENT_URL}users/$userId'));
 
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);

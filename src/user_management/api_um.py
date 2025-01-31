@@ -33,12 +33,12 @@ def api_create_user(user: UserCreate):
     return user_id
 
 # Endpoint for authenticating a user
-@app.post("/users/authenticate", response_model=int)
+@app.post("/users/authenticate", response_model=str)
 def api_authenticate_user(user: UserAuth):
-    user_id = authenticate_user(user.email, user.password)
-    if user_id is None:
+    user = authenticate_user(user.email, user.password)
+    if user is None:
         raise HTTPException(status_code=401, detail="Authentication failed")
-    return user_id
+    return user
 
 # Endpoint for getting user data
 @app.get("/users/{user_id}")

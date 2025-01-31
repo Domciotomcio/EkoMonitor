@@ -23,7 +23,7 @@ class WeatherUnitView extends StatefulWidget {
 class _WeatherUnitViewState extends State<WeatherUnitView> {
   final HistoricalService historicalService = HistoricalService();
 
-  DateTime startDate = DateTime.now();
+  DateTime startDate = DateTime.now().subtract(const Duration(hours: 1));
 
   DateTime endDate = DateTime.now();
 

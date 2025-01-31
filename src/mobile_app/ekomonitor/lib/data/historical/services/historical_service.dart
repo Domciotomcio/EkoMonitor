@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:ekomonitor/data/const.dart';
 import 'package:ekomonitor/data/historical/models/historical_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -16,7 +17,7 @@ class HistoricalService {
     log('start: $startInt, end: $endInt');
 
     final response = await http.get(Uri.parse(
-        'http://127.0.0.1:8001/historical/point?lat=51&lon=17&start=${startInt}&end=${endInt}'));
+        '${DATA_PROCESSING_URL}historical/point?lat=51&lon=17&start=${startInt}&end=${endInt}'));
 
     if (response.statusCode == 200) {
       final responseMap = json.decode(response.body);

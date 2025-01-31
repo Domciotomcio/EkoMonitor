@@ -152,13 +152,19 @@ def read_user_answer(answer_id):
         cur = conn.cursor()
         cur.execute(sql_query, (answer_id,))
         user_answer = cur.fetchone()
+        column_names = [desc[0] for desc in cur.description]
         cur.close()
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
     finally:
         if conn is not None:
             conn.close()
-    return user_answer
+    if user_answer:
+        user_answer_dict = dict(zip(column_names, user_answer))
+        user_answer_json = '{' + ', '.join(f'"{k}": "{v}"' for k, v in user_answer_dict.items()) + '}'
+    else:
+        user_answer_json = "{}"
+    return user_answer_json
 
 # Update user answer by answer_id
 def update_user_answer(answer_id, user_id, outdoor_activities, health_concerns, daily_commute, gardening, weather_interest):

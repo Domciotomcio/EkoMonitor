@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:ekomonitor/data/const.dart';
 import 'package:ekomonitor/data/user_profile/models/user_profile_model.dart';
 import 'package:ekomonitor/views/form/form_view.dart';
 import 'package:http/http.dart' as http;
@@ -8,7 +9,7 @@ import 'package:http/http.dart' as http;
 class UserProfileService {
   Future<UserProfileModel> getUserProfileData(int userId) async {
     final response =
-        await http.get(Uri.parse('http://localhost:8005/user_answers/$userId'));
+        await http.get(Uri.parse('${USER_PROFILING_URL}user_answers/$userId'));
 
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);

@@ -94,7 +94,7 @@ def authenticate_user(email, password):
     finally:
         if conn is not None:
             conn.close()
-    return user_id
+    return get_user(user_id)
 
 # Get user by user_id
 def get_user(user_id):
@@ -106,13 +106,19 @@ def get_user(user_id):
         cur = conn.cursor()
         cur.execute(sql_query, (user_id,))
         user = cur.fetchone()
+        column_names = [desc[0] for desc in cur.description]
         cur.close()
     except (Exception, psycopg2.DatabaseError) as error:
         print(error, " Error getting user")
     finally:
         if conn is not None:
             conn.close()
-    return user
+    if user:
+        user_dict = dict(zip(column_names, user))
+        user_json = '{' + ', '.join(f'"{k}": "{v}"' for k, v in user_dict.items()) + '}'
+    else:
+        user_json = "{}"
+    return user_json
 
 # Update user details
 def update_user(user_id, first_name, last_name, city, email, password):
