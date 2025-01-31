@@ -15,14 +15,32 @@ import datetime as dt
 #  Wind Speed, Wind Degrees, pm10, pm2_5, aqi
 
 def signed_log_transform(x):
+    """
+    Calculate the signed logarithm of the absolute value of x
+    :param x: Input value
+    :return: Signed logarithm of the absolute value of x
+    """
     return np.sign(x) * np.log1p(np.abs(x))
 
 
 def signed_log_inverse(x):
+    """
+    Calculate the inverse of the signed logarithm of the absolute value of x
+    :param x: Input value
+    :return: Inverse of the signed logarithm of the absolute value of x
+    """
     return np.sign(x) * np.expm1(np.abs(x))
 
 
 def create_model():
+    """
+    Create a neural network model for forecasting
+    The model has 6 input neurons and 12 output neurons
+    It has 3 hidden layers with 128, 64 and 64 neurons respectively, all using the swish activation function
+    The output layer uses the linear activation function
+    The model is compiled using the mean squared error loss function and the Adam optimizer
+    :return: Neural network model
+    """
     model = Sequential()
     model.add(Input(shape=(6,)))
     model.add(Dense(128, activation='swish'))
@@ -34,12 +52,24 @@ def create_model():
 
 
 def save_model(code, model, mean, std):
+    """
+    Save the model, mean and standard deviation to files
+    :param code: Code to use in the file names
+    :param model: Model to save
+    :param mean: Mean to save
+    :param std: Standard deviation to save
+    """
     model.save(f"forecast_model_{code}.keras")
     np.save(f"mean_{code}.npy", mean)
     np.save(f"std_{code}.npy", std)
 
 
 def load_model(code):
+    """
+    Load the model, mean and standard deviation from files
+    :param code: Code to use in the file names
+    :return: Model, mean and standard deviation
+    """
     model = create_model()
     mean = None
     std = None
@@ -54,11 +84,30 @@ def load_model(code):
 
 
 def train_model(model, X_train, X_valid, y_train, y_valid, epochs=10, batch_size=32):
+    """
+    Train the model using the given data
+    :param model: Model to train
+    :param X_train: Training input data
+    :param X_valid: Validation input data
+    :param y_train: Training output data
+    :param y_valid: Validation output data
+    :param epochs: Number of epochs to train for
+    :param batch_size: Batch size to use
+    :return: Trained model and training history
+    """
     history = model.fit(X_train, y_train, validation_data=(X_valid, y_valid), epochs=epochs, batch_size=batch_size)
     return model, history
 
 
 def get_data(time_from, time_to, lat, lon):
+    """
+    Get historical weather data from the data processing service
+    :param time_from: Start time in timestamp format
+    :param time_to: End time in timestamp format
+    :param lat: Latitude
+    :param lon: Longitude
+    :return: Weather data
+    """
     url = f"http://data_processing:8001/historical/point?lat={lat}&lon={lon}&start={time_from}&end={time_to}"
     response = requests.get(url)
     data = response.json()
@@ -66,6 +115,10 @@ def get_data(time_from, time_to, lat, lon):
 
 
 def get_data_all():
+    """
+    Get all historical weather data from the data processing service
+    :return: Weather data
+    """
     url = "http://data_processing:8001/historical/all/nopollen"
     response = requests.get(url)
     data = response.json()
@@ -73,6 +126,13 @@ def get_data_all():
 
 
 def process_data(data, mean=None, std=None, proportion=0.8):
+    """
+    Process the data for training the model
+    :param data: Weather data
+    :param mean: Mean values for normalization
+    :param std: Standard deviation values for normalization
+    :param proportion: Proportion of data to use for training
+    :return: Mean, standard deviation, training and validation input and output data"""
     dlist = []
     if isinstance(data, dict):
         for i in data["weather_data"]:
@@ -137,6 +197,14 @@ def process_data(data, mean=None, std=None, proportion=0.8):
 
 
 def process_data_test(data, mean=None, std=None, proportions=(0.8, 0.5)):
+    """
+    Process the data for training and testing the model
+    :param data: Weather data
+    :param mean: Mean values for normalization
+    :param std: Standard deviation values for normalization
+    :param proportions: Proportions of data to use for training, validation and testing
+    :return: Mean, standard deviation, training, validation and testing input and output data
+    """
     dlist = []
     if isinstance(data, dict):
         for i in data["weather_data"]:
@@ -200,10 +268,27 @@ def process_data_test(data, mean=None, std=None, proportions=(0.8, 0.5)):
 
 
 def test_model(model, X_test, y_test):
+    """
+    Test the model using the given data
+    :param model: Model to test
+    :param X_test: Test input data
+    :param y_test: Test output data
+    :return: Test results
+    """
     return model.evaluate(X_test, y_test)
 
 
 def forecast(model, mean, std, timestamp, lat, lon):
+    """
+    Forecast weather data for a given time and location
+    :param model: Model to use for forecasting
+    :param mean: Mean values for normalization
+    :param std: Standard deviation values for normalization
+    :param timestamp: Time in timestamp format
+    :param lat: Latitude
+    :param lon: Longitude
+    :return: Forecasted weather data
+    """
     date = dt.datetime.fromtimestamp(timestamp)
     df = pd.DataFrame([{"latitude": lat, "longitude": lon, "year": date.year, "month": date.month,
                     "day": date.day, "hour": date.hour}])
